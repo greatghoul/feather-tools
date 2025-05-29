@@ -32,7 +32,18 @@
     </nav>
     
     <main class="container py-4">
-        {% block content %}{% endblock %}
+        <div class="row">
+            {% if show_sidebar|default(true) %}
+            <div class="col-md-4 col-lg-3 d-md-block">
+                {% include "sidebar.html" %}
+            </div>
+            <div class="col-md-8 col-lg-9">
+            {% else %}
+            <div class="col-12">
+            {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
     </main>
     
     <footer class="footer mt-auto py-3 bg-light">
