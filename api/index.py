@@ -52,5 +52,13 @@ def tool_home(tool):
 
     return redirect(url_for('home'))
 
+@app.route('/site.webmanifest')
+def site_webmanifest():
+    return app.send_static_file('site.webmanifest')
+
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')
+
 if __name__ == '__main__':
     app.run(debug=True)
