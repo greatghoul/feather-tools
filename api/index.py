@@ -36,7 +36,9 @@ def inject_globals():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    settings = load_settings(get_locale())
+    tools = settings.get('tools', {})
+    return render_template('home.html', tools=tools)
 
 @app.route('/<path:tool>')
 def tool_home(tool):
