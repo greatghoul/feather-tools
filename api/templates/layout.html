@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    {% if not debug %}
+    {% if flask_env == 'production' %}
         {% include "shared/script_ga.html" %}
     {% endif %}
 

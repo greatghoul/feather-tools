@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 DEFAULT_LOCALE = 'en'
 SETTINGS_DIR = os.path.join(app.root_path, 'settings')
+FLASK_ENV = os.environ.get('FLASK_ENV', 'development')
 
 Minify(app=app, html=False, js=True, cssless=True)
 
@@ -32,7 +33,7 @@ def get_locale():
 def inject_globals():
     settings = load_settings(get_locale())
     site_data = settings.get('site', {})
-    return dict(debug=app.debug, **site_data)
+    return dict(flask_env=FLASK_ENV, **site_data)
 
 @app.route('/')
 def home():
