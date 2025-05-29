@@ -32,7 +32,7 @@ def get_locale():
 def inject_globals():
     settings = load_settings(get_locale())
     site_data = settings.get('site', {})
-    return dict(**site_data)
+    return dict(debug=app.debug, **site_data)
 
 @app.route('/')
 def home():
