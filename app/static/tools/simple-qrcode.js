@@ -98,6 +98,8 @@ function generateQRCode() {
         colorLight: background,
         correctLevel: QRCode.CorrectLevel.H
     });
+
+    qrcodePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function handleSubmit (e) {
