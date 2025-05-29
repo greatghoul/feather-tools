@@ -1,0 +1,17 @@
+en:
+  site:
+    site_name: "Feather Tools"
+    site_note: "All our tools are free and lightweight, designed to help you get things done quickly and efficiently."
+    site_note_html: "All our tools are <strong>free</strong> and <strong>lightweight</strong>, designed to help you get things done quickly and efficiently."
+    site_tags:
+      - "online tools"
+      - "free"
+      - "lightweight"
+      - "productivity"
+  tools:
+    simple-qrcode:
+      page_name: "Simple QRCode"
+      page_note: "Generate QR code for your URL and customize its colors and size."
+      page_tags:
+        - "qrcode"
+        - "image generator"
