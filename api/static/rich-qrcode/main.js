@@ -250,13 +250,13 @@ function generateQRCodeCard() {
             const truncatedTitle = truncateText(title, config.textMaxWidth, config.titleFontSize);
             ctx.fillStyle = config.titleFontColor;
             ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
-            ctx.fillText(truncatedTitle, config.padding, config.padding + 25);
+            ctx.fillText(truncatedTitle, config.padding, config.padding + 35);
             
             // Draw URL with truncation (adjusted Y position to account for larger font)
             const truncatedUrl = truncateText(url, config.textMaxWidth, config.urlFontSize);
             ctx.font = `${config.urlFontSize}px ${config.urlFontFamily}`;
             ctx.fillStyle = config.urlFontColor;
-            ctx.fillText(truncatedUrl, config.padding, config.padding + 60);
+            ctx.fillText(truncatedUrl, config.padding, config.padding + 75);
             
             // Enable download button
             downloadBtn.disabled = false;
