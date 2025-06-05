@@ -1,4 +1,6 @@
 // Get form elements
+import QRCode from 'qrcode';
+
 const form = document.getElementById('rich-qrcode-form');
 const urlInput = document.getElementById('url-input');
 const titleInput = document.getElementById('title-input');
@@ -171,6 +173,13 @@ function drawEmptyCard() {
     ctx.fillRect(config.padding, config.padding, 
                  config.qrCodeSize, config.qrCodeSize);
     
+    // Draw QR code placeholder icon or pattern
+    ctx.fillStyle = '#bbbbbb';
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('QR', config.padding + config.qrCodeSize/2, config.padding + config.qrCodeSize/2 + 8);
+    ctx.textAlign = 'left'; // Reset text alignment
+    
     // Draw placeholder text with higher contrast against dark background
     ctx.fillStyle = config.titleFontColor;
     ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
@@ -212,42 +221,50 @@ function generateQRCodeCard() {
     ctx.fillStyle = config.backgroundColor;
     ctx.fillRect(0, 0, config.width, config.height);
     
-    // Generate QR code to a temporary canvas
-    const tempCanvas = document.createElement('canvas');
-    new QRCode(tempCanvas, {
-        text: url,
+    // Generate QR code using Promise-based approach
+    QRCode.toDataURL(url, {
         width: config.qrCodeSize,
-        height: config.qrCodeSize,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
-    });
-    
-    // Draw QR code onto our card canvas
-    setTimeout(() => {
-        // QRCode library needs a moment to generate the code
-        ctx.drawImage(tempCanvas, config.padding, config.padding);
-        
-        // Draw title with truncation
-        const truncatedTitle = truncateText(title, config.titleMaxWidth, config.titleFontSize);
-        ctx.fillStyle = config.titleFontColor;
-        ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
-        ctx.fillText(truncatedTitle, config.padding + config.qrCodeSize + 15, config.padding + 25);
-        
-        // Draw URL with truncation (adjusted Y position to account for larger font)
-        const truncatedUrl = truncateText(url, config.titleMaxWidth, config.urlFontSize);
-        ctx.font = `${config.urlFontSize}px ${config.urlFontFamily}`;
-        ctx.fillStyle = config.urlFontColor;
-        ctx.fillText(truncatedUrl, config.padding + config.qrCodeSize + 15, config.padding + 60);
-        
-        // Enable download button
-        downloadBtn.disabled = false;
-        
-        // Show success message if triggered from button (not from automatic title changes)
-        if (generateSpinner.classList.contains('d-none') === false) {
-            showAlert('QR code card generated successfully! You can now download it.', 'success');
+        margin: 0,
+        color: {
+            dark: '#000000', // QR code color
+            light: '#ffffff' // Background color
         }
-    }, 50);
+    })
+    .then(qrDataUrl => {
+        // Create an image from the QR code data URL
+        const qrImage = new Image();
+        qrImage.onload = () => {
+            // Draw QR code onto our card canvas
+            ctx.drawImage(qrImage, config.padding, config.padding, config.qrCodeSize, config.qrCodeSize);
+            
+            // Draw title with truncation
+            const truncatedTitle = truncateText(title, config.titleMaxWidth, config.titleFontSize);
+            ctx.fillStyle = config.titleFontColor;
+            ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
+            ctx.fillText(truncatedTitle, config.padding + config.qrCodeSize + 15, config.padding + 25);
+            
+            // Draw URL with truncation (adjusted Y position to account for larger font)
+            const truncatedUrl = truncateText(url, config.titleMaxWidth, config.urlFontSize);
+            ctx.font = `${config.urlFontSize}px ${config.urlFontFamily}`;
+            ctx.fillStyle = config.urlFontColor;
+            ctx.fillText(truncatedUrl, config.padding + config.qrCodeSize + 15, config.padding + 60);
+            
+            // Enable download button
+            downloadBtn.disabled = false;
+            
+            // Show success message if triggered from button (not from automatic title changes)
+            if (generateSpinner.classList.contains('d-none') === false) {
+                showAlert('QR code card generated successfully! You can now download it.', 'success');
+            }
+        };
+        
+        // Set the image source after defining the onload handler
+        qrImage.src = qrDataUrl;
+    })
+    .catch(error => {
+        console.error('Error generating QR code:', error);
+        showAlert('Failed to generate QR code. Please try again.', 'danger');
+    });
 }
 
 // Handle download button click
