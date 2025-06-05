@@ -1,3 +1,9 @@
 Flask==3.0.3
 Flask-Minify==0.50
 PyYAML==6.0.1
+requests==2.31.0
+urllib3>=1.26.0,<2.0.0  # Compatible with both requests and responses
+
+# Testing dependencies
+pytest==7.4.3
+responses==0.23.1  # Using an earlier version that might work better with urllib3

@@ -5,7 +5,11 @@ from functools import lru_cache
 import os
 import yaml
 
+# Import the Blueprint using a relative import
+from .api import api_bp
+
 app = Flask(__name__)
+app.register_blueprint(api_bp)
 
 DEFAULT_LOCALE = 'en'
 SETTINGS_DIR = os.path.join(app.root_path, 'settings')
