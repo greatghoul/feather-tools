@@ -27,7 +27,8 @@ const config = {
     urlFontSize: 20, // Increased from 12px to 20px as requested
     urlFontFamily: 'Arial, sans-serif',
     urlFontColor: '#E0E0E0', // Changed from #cccccc to #E0E0E0 as requested
-    titleMaxWidth: 720, // Width available for title text
+    titleMaxWidth: 720, // Total available width before adjustments
+    textMaxWidth: 615, // Width available for text with QR on right (width - qrCodeSize - 2*padding - extra margin)
     backgroundColor: '#445271', // Rich navy blue background
     textColor: '#ffffff', // White text for better contrast on dark background
     accentColor: '#f0f0f0' // Background for QR code area
@@ -168,22 +169,27 @@ function drawEmptyCard() {
     ctx.fillStyle = config.backgroundColor;
     ctx.fillRect(0, 0, config.width, config.height);
     
+    // Calculate QR code position (right side)
+    const qrCodeX = config.width - config.padding - config.qrCodeSize;
+    
     // Draw QR code area placeholder
     ctx.fillStyle = config.accentColor;
-    ctx.fillRect(config.padding, config.padding, 
+    ctx.fillRect(qrCodeX, config.padding, 
                  config.qrCodeSize, config.qrCodeSize);
     
     // Draw QR code placeholder icon or pattern
     ctx.fillStyle = '#bbbbbb';
     ctx.font = '24px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('QR', config.padding + config.qrCodeSize/2, config.padding + config.qrCodeSize/2 + 8);
+    ctx.fillText('QR', qrCodeX + config.qrCodeSize/2, config.padding + config.qrCodeSize/2 + 8);
     ctx.textAlign = 'left'; // Reset text alignment
     
     // Draw placeholder text with higher contrast against dark background
     ctx.fillStyle = config.titleFontColor;
     ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
-    ctx.fillText('Enter a URL and click Generate', config.padding + config.qrCodeSize + 15, 50);
+    const placeholderText = 'Enter a URL and click Generate';
+    const truncatedPlaceholder = truncateText(placeholderText, config.textMaxWidth, config.titleFontSize);
+    ctx.fillText(truncatedPlaceholder, config.padding, 50);
 }
 
 // Function to truncate text with ellipsis
@@ -234,20 +240,23 @@ function generateQRCodeCard() {
         // Create an image from the QR code data URL
         const qrImage = new Image();
         qrImage.onload = () => {
+            // Calculate QR code position (right side)
+            const qrCodeX = config.width - config.padding - config.qrCodeSize;
+            
             // Draw QR code onto our card canvas
-            ctx.drawImage(qrImage, config.padding, config.padding, config.qrCodeSize, config.qrCodeSize);
+            ctx.drawImage(qrImage, qrCodeX, config.padding, config.qrCodeSize, config.qrCodeSize);
             
             // Draw title with truncation
-            const truncatedTitle = truncateText(title, config.titleMaxWidth, config.titleFontSize);
+            const truncatedTitle = truncateText(title, config.textMaxWidth, config.titleFontSize);
             ctx.fillStyle = config.titleFontColor;
             ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
-            ctx.fillText(truncatedTitle, config.padding + config.qrCodeSize + 15, config.padding + 25);
+            ctx.fillText(truncatedTitle, config.padding, config.padding + 25);
             
             // Draw URL with truncation (adjusted Y position to account for larger font)
-            const truncatedUrl = truncateText(url, config.titleMaxWidth, config.urlFontSize);
+            const truncatedUrl = truncateText(url, config.textMaxWidth, config.urlFontSize);
             ctx.font = `${config.urlFontSize}px ${config.urlFontFamily}`;
             ctx.fillStyle = config.urlFontColor;
-            ctx.fillText(truncatedUrl, config.padding + config.qrCodeSize + 15, config.padding + 60);
+            ctx.fillText(truncatedUrl, config.padding, config.padding + 60);
             
             // Enable download button
             downloadBtn.disabled = false;
