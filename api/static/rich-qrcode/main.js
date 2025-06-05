@@ -19,11 +19,15 @@ const config = {
     height: 120,
     qrCodeSize: 90,
     padding: 15,
-    titleFontSize: 16,
-    urlFontSize: 12,
+    titleFontSize: 24,
+    titleFontFamily: '"Microsoft YaHei", sans-serif',
+    titleFontColor: '#A0BDFE', // Light blue color for title
+    urlFontSize: 20, // Increased from 12px to 20px as requested
+    urlFontFamily: 'Arial, sans-serif',
+    urlFontColor: '#E0E0E0', // Changed from #cccccc to #E0E0E0 as requested
     titleMaxWidth: 720, // Width available for title text
-    backgroundColor: '#ffffff',
-    textColor: '#333333',
+    backgroundColor: '#445271', // Rich navy blue background
+    textColor: '#ffffff', // White text for better contrast on dark background
     accentColor: '#f0f0f0' // Background for QR code area
 };
 
@@ -167,15 +171,20 @@ function drawEmptyCard() {
     ctx.fillRect(config.padding, config.padding, 
                  config.qrCodeSize, config.qrCodeSize);
     
-    // Draw placeholder text
-    ctx.fillStyle = '#cccccc';
-    ctx.font = `${config.titleFontSize}px Arial`;
+    // Draw placeholder text with higher contrast against dark background
+    ctx.fillStyle = config.titleFontColor;
+    ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
     ctx.fillText('Enter a URL and click Generate', config.padding + config.qrCodeSize + 15, 50);
 }
 
 // Function to truncate text with ellipsis
 function truncateText(text, maxWidth, fontSize) {
-    ctx.font = `${fontSize}px Arial`;
+    // Set the appropriate font for measurement based on whether it's the title or URL
+    if (fontSize === config.titleFontSize) {
+        ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
+    } else {
+        ctx.font = `${fontSize}px ${config.urlFontFamily}`;
+    }
     
     if (ctx.measureText(text).width <= maxWidth) {
         return text;
@@ -221,15 +230,15 @@ function generateQRCodeCard() {
         
         // Draw title with truncation
         const truncatedTitle = truncateText(title, config.titleMaxWidth, config.titleFontSize);
-        ctx.fillStyle = config.textColor;
-        ctx.font = `bold ${config.titleFontSize}px Arial`;
-        ctx.fillText(truncatedTitle, config.padding + config.qrCodeSize + 15, config.padding + 20);
+        ctx.fillStyle = config.titleFontColor;
+        ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
+        ctx.fillText(truncatedTitle, config.padding + config.qrCodeSize + 15, config.padding + 25);
         
-        // Draw URL with truncation
+        // Draw URL with truncation (adjusted Y position to account for larger font)
         const truncatedUrl = truncateText(url, config.titleMaxWidth, config.urlFontSize);
-        ctx.font = `${config.urlFontSize}px Arial`;
-        ctx.fillStyle = '#666666';
-        ctx.fillText(truncatedUrl, config.padding + config.qrCodeSize + 15, config.padding + 45);
+        ctx.font = `${config.urlFontSize}px ${config.urlFontFamily}`;
+        ctx.fillStyle = config.urlFontColor;
+        ctx.fillText(truncatedUrl, config.padding + config.qrCodeSize + 15, config.padding + 60);
         
         // Enable download button
         downloadBtn.disabled = false;
