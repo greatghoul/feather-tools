@@ -23,20 +23,17 @@ def get_link_metadata():
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         
-        # Start with a HEAD request to check content type
-        head_response = requests.head(url, headers=headers, timeout=3, allow_redirects=True)
-        head_response.raise_for_status()
-        
-        content_type = head_response.headers.get('Content-Type', '').lower()
-        final_url = head_response.url
-        
         title = None
         
-        if 'text/html' in content_type:
-            # Stream the response until we find the title or reach a limit
-            with requests.get(final_url, headers=headers, stream=True, timeout=5) as response:
-                response.raise_for_status()
-                
+        # Directly use GET with streaming to efficiently fetch headers and content
+        with requests.get(url, headers=headers, stream=True, timeout=5, allow_redirects=True) as response:
+            response.raise_for_status()
+            
+            final_url = response.url
+            content_type = response.headers.get('Content-Type', '').lower()
+            
+            # Only process HTML content for title extraction
+            if 'text/html' in content_type:
                 chunk_size = 8192  # 8KB
                 max_size = 1024 * 1024  # 1MB max to read
                 total_read = 0

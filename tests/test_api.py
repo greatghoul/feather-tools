@@ -24,13 +24,7 @@ def test_link_meta_html_response(client):
     test_title = 'Example Domain'
     html_content = f'<html><head><title>{test_title}</title></head><body>Test content</body></html>'
     
-    # Mock the HEAD request
-    responses.add(
-        responses.HEAD, 
-        test_url,
-        headers={'Content-Type': 'text/html'},
-        status=200
-    )
+    # No need to mock HEAD request anymore, using GET only
     
     # Mock the GET request
     responses.add(
@@ -63,12 +57,13 @@ def test_link_meta_non_html_response(client):
     """Test the link-meta endpoint with a non-HTML response."""
     test_url = 'https://example.com/file.pdf'
     
-    # Mock the HEAD request
+    # Mock the GET request with non-HTML content type
     responses.add(
-        responses.HEAD,
+        responses.GET,
         test_url,
         headers={'Content-Type': 'application/pdf'},
-        status=200
+        status=200,
+        body=b'PDF content'
     )
     
     response = client.get(f'/api/link-meta?url={test_url}')
@@ -86,7 +81,7 @@ def test_link_meta_request_error(client):
     
     # Mock a connection error
     responses.add(
-        responses.HEAD,
+        responses.GET,
         test_url,
         body=requests.RequestException('Connection error')
     )
@@ -117,13 +112,7 @@ def test_link_meta_partial_html(client):
     </html>
     '''
     
-    # Mock the HEAD request
-    responses.add(
-        responses.HEAD,
-        test_url,
-        headers={'Content-Type': 'text/html'},
-        status=200
-    )
+    # No need to mock HEAD request anymore, using GET only
     
     # Mock the GET request with chunked response
     responses.add(
@@ -150,13 +139,7 @@ def test_link_meta_no_scheme_url(client):
     test_title = 'Example Domain'
     html_content = f'<html><head><title>{test_title}</title></head><body>Test content</body></html>'
     
-    # Mock the HEAD request
-    responses.add(
-        responses.HEAD,
-        expected_url,
-        headers={'Content-Type': 'text/html'},
-        status=200
-    )
+    # No need to mock HEAD request anymore, using GET only
     
     # Mock the GET request
     responses.add(
