@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% set url = request.args.get('url', 'https://example.com') %}
+{% set url = request.args.get('url', '') %}
 
 {% block head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='rich-qrcode/styles.css') }}">
@@ -10,6 +10,17 @@
 <h1 class="mb-4">{{ page_name }}</h1>
 <p class="lead mb-5">{{ page_note }}</p>
 
+<form id="rich-qrcode-form" class="mb-5">
+  <div class="url-input-container">
+    <div class="input-group input-group-lg">
+      <input type="url" class="form-control form-control-lg" id="url-input" 
+        placeholder="https://example.com" value="{{ url }}" 
+        aria-label="URL to create Rich QR code for">
+      <button type="submit" class="btn btn-primary" id="fetch-metadata-btn">Fetch</button>
+    </div>
+  </div>
+</form>
+
 <div class="row">
   <div class="col-lg-6">
     <div class="card mb-4">
@@ -17,7 +28,13 @@
         <h5 class="mb-0">Rich QR Code Settings</h5>
       </div>
       <div class="card-body">
-        <!-- Form content will go here -->
+        <div class="form-group mb-3">
+          <label for="title-input">Title:</label>
+          <input type="text" class="form-control" id="title-input" placeholder="Title will appear here">
+        </div>
+        
+        <!-- Additional settings can go here -->
+        </form>
       </div>
     </div>
   </div>
@@ -28,7 +45,10 @@
         <h5 class="mb-0">Preview</h5>
       </div>
       <div class="card-body text-center">
-        <!-- Preview content will go here -->
+        <div class="qrcode-card-container mb-3">
+          <canvas id="qrcode-card" width="860" height="120"></canvas>
+        </div>
+        <button id="download-card-btn" class="btn btn-outline-secondary" disabled>Download Card</button>
       </div>
     </div>
   </div>

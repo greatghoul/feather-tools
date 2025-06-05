@@ -1,4 +1,19 @@
 /* Rich QR Code styles */
+/* URL input styling */
+.url-input-container {
+  margin-bottom: 1.5rem;
+}
+
+.input-group-lg .form-control-lg {
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+}
+
+.input-group-lg .btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}
+
 .qrcode-card-container {
   display: flex;
   justify-content: center;
