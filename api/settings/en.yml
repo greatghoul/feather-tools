@@ -15,3 +15,11 @@ en:
       page_tags:
         - "qrcode"
         - "image generator"
+    rich-qrcode:
+      page_name: "Rich QRCode"
+      page_note: "Generate enhanced QR code cards with title and URL information alongside the QR code."
+      page_tags:
+        - "qrcode"
+        - "image generator"
+        - "card generator"
+        - "link sharing"

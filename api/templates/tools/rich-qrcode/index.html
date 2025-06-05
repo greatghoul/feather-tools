@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% set url = request.args.get('url', 'https://example.com') %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='rich-qrcode/styles.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{{ page_name }}</h1>
+<p class="lead mb-5">{{ page_note }}</p>
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Rich QR Code Settings</h5>
+      </div>
+      <div class="card-body">
+        <!-- Form content will go here -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Preview</h5>
+      </div>
+      <div class="card-body text-center">
+        <!-- Preview content will go here -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='rich-qrcode/main.js') }}" type="module"></script>
+{% endblock %}
