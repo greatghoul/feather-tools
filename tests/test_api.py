@@ -88,7 +88,7 @@ def test_link_meta_request_error(client):
     
     response = client.get(f'/api/link-meta?url={test_url}')
     
-    assert response.status_code == 500
+    assert response.status_code == 400
     data = json.loads(response.data)
     assert 'error' in data
 

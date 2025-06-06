@@ -78,7 +78,7 @@ def get_link_metadata():
         })
     
     except requests.RequestException as e:
-        return jsonify({'error': f'Failed to fetch URL: {str(e)}'}), 500
+        return jsonify({'error': f'Failed to fetch URL: {str(e)}'}), 400
     except UnicodeDecodeError:
         # If decoding fails, use filename as fallback
         path = urlparse(url).path
@@ -88,4 +88,4 @@ def get_link_metadata():
             'url': url
         })
     except Exception as e:
-        return jsonify({'error': f'Error processing request: {str(e)}'}), 500
+        return jsonify({'error': f'Error processing request: {str(e)}'}), 400

@@ -35,3 +35,6 @@ Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_mediu
 
 node-qrcode
 https://www.jsdelivr.com/package/npm/qrcode
+
+simple-notify
+https://github.com/simple-notify/simple-notify

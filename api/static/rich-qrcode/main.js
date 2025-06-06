@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import axios from 'axios';
 
 // Get form elements
 const form = document.getElementById('rich-qrcode-form');
@@ -94,9 +95,9 @@ function setFormDisabled(disabled) {
 
 // Function to fetch URL metadata
 function fetchUrlMetadata(url) {
-    fetch(`/api/link-meta?url=${encodeURIComponent(url)}`)
-        .then(response => response.json())
-        .then(data => {
+    axios.get(`/api/link-meta?url=${encodeURIComponent(url)}`)
+        .then(response => {
+            const data = response.data;
             console.log('Metadata received:', data);
             // Update title if available
             if (data.title) {
@@ -115,7 +116,7 @@ function fetchUrlMetadata(url) {
             console.error('Error fetching metadata:', error);
             
             // Show error message
-            notify('Failed to fetch', 'Please check the URL and try again.', 'danger');
+            notify('Failed to fetch', 'Please check the URL and try again.', 'error');
 
             // Use URL as title if metadata fetch fails
             if (!titleInput.value) {
@@ -299,14 +300,14 @@ function generateQRCodeCard() {
     })
     .catch(error => {
         console.error('Error generating QR code:', error);
-        notify('Failed to generate.', 'Please try again later.', 'danger');
+        notify('Failed to generate.', 'Please try again later.', 'error');
     });
 }
 
 // Handle PNG download button click
 downloadPngBtn.addEventListener('click', function() {
     if (!canvas.dataset.qrCodeUrl) {
-        notify('Failed to download.', 'Please generate the QR code first', 'danger');
+        notify('Failed to download.', 'Please generate the QR code first', 'error');
         return;
     }
 
@@ -322,7 +323,7 @@ downloadPngBtn.addEventListener('click', function() {
 // Handle SVG download button click
 downloadSvgBtn.addEventListener('click', function() {
     if (!canvas.dataset.qrCodeUrl) {
-        notify('Failed to download.', 'Please generate the QR code first', 'danger');
+        notify('Failed to download.', 'Please generate the QR code first', 'error');
         return;
     }
     
