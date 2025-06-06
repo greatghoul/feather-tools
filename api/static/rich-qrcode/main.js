@@ -1,6 +1,6 @@
-// Get form elements
 import QRCode from 'qrcode';
 
+// Get form elements
 const form = document.getElementById('rich-qrcode-form');
 const urlInput = document.getElementById('url-input');
 const titleInput = document.getElementById('title-input');
@@ -107,17 +107,16 @@ function fetchUrlMetadata(url) {
             urlDisplay.value = url;
             
             // Show success message
-            showAlert('Metadata fetched successfully. Click "Generate QR Code Card" to create your QR code.', 'success');
+            notify('Fetched successfully', '', 'success');
             
-            // Don't automatically generate QR code after fetching metadata
-            // User needs to click the Generate button
+            generateQRCodeCard();
         })
         .catch(error => {
             console.error('Error fetching metadata:', error);
             
             // Show error message
-            showAlert('Failed to fetch metadata. Please check the URL and try again.', 'danger');
-            
+            notify('Failed to fetch', 'Please check the URL and try again.', 'danger');
+
             // Use URL as title if metadata fetch fails
             if (!titleInput.value) {
                 titleInput.value = urlInput.value;
@@ -131,25 +130,24 @@ function fetchUrlMetadata(url) {
         });
 }
 
-// Function to show an alert message
-function showAlert(message, type = 'info') {
-    // Create alert element
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
-    alertDiv.role = 'alert';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-    
-    // Insert after the form
-    form.parentNode.insertBefore(alertDiv, form.nextSibling);
-    
-    // Auto-dismiss after 5 seconds
-    setTimeout(() => {
-        const bsAlert = bootstrap.Alert.getOrCreateInstance(alertDiv);
-        bsAlert.close();
-    }, 5000);
+/**
+ * Displays a notification message using the global Notify class.
+ *
+ * @param {string} title - The title of the notification.
+ * @param {string} message - The message content of the notification.
+ * @param {'info'|'success'|'warning'|'error'} [status='info'] - The status type of the notification.
+ */
+function notify(title, message, status = 'info') {
+    new window.Notify({
+        status: status,
+        title: title,
+        text: message,
+        effect: 'fade',
+        speed: 300,
+        autoclose: true,
+        autotimeout: 3000,
+        position: 'x-center top'
+    });
 }
 
 // Generate button click handler
@@ -294,11 +292,6 @@ function generateQRCodeCard() {
             canvas.dataset.qrCodeX = qrCodeX;
             canvas.dataset.qrCodeY = config.padding;
             canvas.dataset.qrCodeSize = config.qrCodeSize;
-            
-            // Show success message if triggered from button (not from automatic title changes)
-            if (generateSpinner.classList.contains('d-none') === false) {
-                showAlert('QR code card generated successfully! You can now download it.', 'success');
-            }
         };
         
         // Set the image source after defining the onload handler
@@ -306,12 +299,17 @@ function generateQRCodeCard() {
     })
     .catch(error => {
         console.error('Error generating QR code:', error);
-        showAlert('Failed to generate QR code. Please try again.', 'danger');
+        notify('Failed to generate.', 'Please try again later.', 'danger');
     });
 }
 
 // Handle PNG download button click
 downloadPngBtn.addEventListener('click', function() {
+    if (!canvas.dataset.qrCodeUrl) {
+        notify('Failed to download.', 'Please generate the QR code first', 'danger');
+        return;
+    }
+
     // Create a temporary link element
     const link = document.createElement('a');
     link.download = 'rich-qrcode.png';
@@ -324,7 +322,7 @@ downloadPngBtn.addEventListener('click', function() {
 // Handle SVG download button click
 downloadSvgBtn.addEventListener('click', function() {
     if (!canvas.dataset.qrCodeUrl) {
-        showAlert('Failed to generate SVG. Please generate the QR code first.', 'danger');
+        notify('Failed to download.', 'Please generate the QR code first', 'danger');
         return;
     }
     
