@@ -60,18 +60,6 @@ form.addEventListener('submit', function(e) {
     if (!url) {
         url = urlInput.placeholder;
     }
-    
-    // Update URL display if not manually edited
-    // (If urlDisplay has been changed manually and is different, don't overwrite it)
-    // This allows users to modify the URL in the settings panel separately
-    if (!urlDisplay.value.trim() || urlDisplay.value.trim() === urlInput.value.trim()) {
-        urlDisplay.value = url;
-    }
-
-    // Disable all form elements during fetch
-    setFormDisabled(true);
-    fetchBtnText.textContent = 'Fetching...';
-    fetchSpinner.classList.remove('d-none');
 
     fetchUrlMetadata(url);
 });
@@ -95,6 +83,11 @@ function setFormDisabled(disabled) {
 
 // Function to fetch URL metadata
 function fetchUrlMetadata(url) {
+    // Disable all form elements during fetch
+    setFormDisabled(true);
+    fetchBtnText.textContent = 'Fetching...';
+    fetchSpinner.classList.remove('d-none');
+
     axios.get(`/api/link-meta?url=${encodeURIComponent(url)}`)
         .then(response => {
             const data = response.data;
