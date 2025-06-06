@@ -13,7 +13,8 @@ const generateSpinner = document.getElementById('generate-spinner');
 const generateBtnText = document.querySelector('.generate-btn-text');
 const canvas = document.getElementById('qrcode-card');
 const ctx = canvas.getContext('2d');
-const downloadBtn = document.getElementById('download-card-btn');
+const downloadPngBtn = document.getElementById('download-png-btn');
+const downloadSvgBtn = document.getElementById('download-svg-btn');
 
 // QR code card configuration
 const config = {
@@ -27,11 +28,11 @@ const config = {
     urlFontSize: 20, // Increased from 12px to 20px as requested
     urlFontFamily: 'Arial, sans-serif',
     urlFontColor: '#E0E0E0', // Changed from #cccccc to #E0E0E0 as requested
-    titleMaxWidth: 720, // Total available width before adjustments
-    textMaxWidth: 615, // Width available for text with QR on right (width - qrCodeSize - 2*padding - extra margin)
+    textMaxWidth: 720, // Width available for text with QR on right (width - qrCodeSize - 2*padding - extra margin)
     backgroundColor: '#445271', // Rich navy blue background
     textColor: '#ffffff', // White text for better contrast on dark background
-    accentColor: '#f0f0f0' // Background for QR code area
+    accentColor: '#f0f0f0', // Background for QR code area
+    borderRadius: 10 // Add round corner setting for the card
 };
 
 // Initialize
@@ -47,7 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // Form elements to disable during fetching
-const formElements = [urlInput, titleInput, generateBtn, fetchMetadataBtn];
+const formElements = [urlInput, titleInput, urlDisplay, generateBtn, fetchMetadataBtn];
 
 // Handle form submission
 form.addEventListener('submit', function(e) {
@@ -59,8 +60,12 @@ form.addEventListener('submit', function(e) {
         url = urlInput.placeholder;
     }
     
-    // Update URL display
-    urlDisplay.value = url;
+    // Update URL display if not manually edited
+    // (If urlDisplay has been changed manually and is different, don't overwrite it)
+    // This allows users to modify the URL in the settings panel separately
+    if (!urlDisplay.value.trim() || urlDisplay.value.trim() === urlInput.value.trim()) {
+        urlDisplay.value = url;
+    }
 
     // Disable all form elements during fetch
     setFormDisabled(true);
@@ -93,11 +98,19 @@ function fetchUrlMetadata(url) {
         .then(response => response.json())
         .then(data => {
             console.log('Metadata received:', data);
+            // Update title if available
             if (data.title) {
                 titleInput.value = data.title;
             }
-            // Generate QR code after fetching metadata
-            generateQRCodeCard();
+            
+            // Always update URL display field to match the fetched URL
+            urlDisplay.value = url;
+            
+            // Show success message
+            showAlert('Metadata fetched successfully. Click "Generate QR Code Card" to create your QR code.', 'success');
+            
+            // Don't automatically generate QR code after fetching metadata
+            // User needs to click the Generate button
         })
         .catch(error => {
             console.error('Error fetching metadata:', error);
@@ -113,7 +126,7 @@ function fetchUrlMetadata(url) {
         .finally(() => {
             // Re-enable all form elements
             setFormDisabled(false);
-            fetchBtnText.textContent = 'Fetch Metadata';
+            fetchBtnText.textContent = 'Fetch';
             fetchSpinner.classList.add('d-none');
         });
 }
@@ -157,25 +170,27 @@ generateBtn.addEventListener('click', function() {
     }, 100);
 });
 
-// Title input change handler
-titleInput.addEventListener('input', function() {
-    // Generate new QR code when title changes, but no loading state needed
-    generateQRCodeCard();
-});
+// No automatic generation on title changes
+// Title input no longer triggers automatic QR code generation
 
 // Function to draw empty card
 function drawEmptyCard() {
     // Clear canvas
+    ctx.clearRect(0, 0, config.width, config.height);
+    
+    // Draw rounded rectangle background
     ctx.fillStyle = config.backgroundColor;
-    ctx.fillRect(0, 0, config.width, config.height);
+    drawRoundedRect(ctx, 0, 0, config.width, config.height, config.borderRadius);
+    ctx.fill();
     
     // Calculate QR code position (right side)
     const qrCodeX = config.width - config.padding - config.qrCodeSize;
     
-    // Draw QR code area placeholder
+    // Draw QR code area placeholder with rounded corners
     ctx.fillStyle = config.accentColor;
-    ctx.fillRect(qrCodeX, config.padding, 
-                 config.qrCodeSize, config.qrCodeSize);
+    const qrRadius = 8; // Smaller radius for the QR code
+    drawRoundedRect(ctx, qrCodeX, config.padding, config.qrCodeSize, config.qrCodeSize, qrRadius);
+    ctx.fill();
     
     // Draw QR code placeholder icon or pattern
     ctx.fillStyle = '#bbbbbb';
@@ -215,17 +230,23 @@ function truncateText(text, maxWidth, fontSize) {
 
 // Function to generate QR code card
 function generateQRCodeCard() {
-    const url = urlInput.value.trim() || urlInput.placeholder;
+    // Use the value from URL display if available (since it's now editable), 
+    // otherwise fall back to the input field
+    const url = urlDisplay.value.trim() || urlInput.value.trim() || urlInput.placeholder;
     const title = titleInput.value.trim() || 'Untitled Link';
     
-    // Update URL display
+    // Make sure URL display is synced
     urlDisplay.value = url;
     
     console.log('Generating QR code card for:', url, 'with title:', title);
     
     // Clear canvas
+    ctx.clearRect(0, 0, config.width, config.height);
+    
+    // Draw rounded rectangle background
     ctx.fillStyle = config.backgroundColor;
-    ctx.fillRect(0, 0, config.width, config.height);
+    drawRoundedRect(ctx, 0, 0, config.width, config.height, config.borderRadius);
+    ctx.fill();
     
     // Generate QR code using Promise-based approach
     QRCode.toDataURL(url, {
@@ -243,6 +264,12 @@ function generateQRCodeCard() {
             // Calculate QR code position (right side)
             const qrCodeX = config.width - config.padding - config.qrCodeSize;
             
+            // Create a rounded rectangle for the QR code background
+            const qrRadius = 8; // Smaller radius for the QR code
+            ctx.fillStyle = '#ffffff';
+            drawRoundedRect(ctx, qrCodeX, config.padding, config.qrCodeSize, config.qrCodeSize, qrRadius);
+            ctx.fill();
+            
             // Draw QR code onto our card canvas
             ctx.drawImage(qrImage, qrCodeX, config.padding, config.qrCodeSize, config.qrCodeSize);
             
@@ -258,8 +285,15 @@ function generateQRCodeCard() {
             ctx.fillStyle = config.urlFontColor;
             ctx.fillText(truncatedUrl, config.padding, config.padding + 75);
             
-            // Enable download button
-            downloadBtn.disabled = false;
+            // Enable download buttons
+            downloadPngBtn.disabled = false;
+            downloadSvgBtn.disabled = false;
+            
+            // Store QR code data URL for SVG generation
+            canvas.dataset.qrCodeUrl = qrDataUrl;
+            canvas.dataset.qrCodeX = qrCodeX;
+            canvas.dataset.qrCodeY = config.padding;
+            canvas.dataset.qrCodeSize = config.qrCodeSize;
             
             // Show success message if triggered from button (not from automatic title changes)
             if (generateSpinner.classList.contains('d-none') === false) {
@@ -276,11 +310,119 @@ function generateQRCodeCard() {
     });
 }
 
-// Handle download button click
-downloadBtn.addEventListener('click', function() {
+// Handle PNG download button click
+downloadPngBtn.addEventListener('click', function() {
     // Create a temporary link element
     const link = document.createElement('a');
     link.download = 'rich-qrcode.png';
     link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
 });
+
+// Handle SVG download button click
+downloadSvgBtn.addEventListener('click', function() {
+    if (!canvas.dataset.qrCodeUrl) {
+        showAlert('Failed to generate SVG. Please generate the QR code first.', 'danger');
+        return;
+    }
+    
+    // Create SVG document
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", config.width);
+    svg.setAttribute("height", config.height);
+    svg.setAttribute("viewBox", `0 0 ${config.width} ${config.height}`);
+    svg.setAttribute("xmlns", svgNS);
+    
+    // Add the card background with rounded corners
+    const path = document.createElementNS(svgNS, "path");
+    // Create a rounded rectangle path
+    const r = config.borderRadius;
+    const w = config.width;
+    const h = config.height;
+    const d = `M${r},0 H${w-r} C${w-r/2},0 ${w},${r/2} ${w},${r} V${h-r} C${w},${h-r/2} ${w-r/2},${h} ${w-r},${h} H${r} C${r/2},${h} 0,${h-r/2} 0,${h-r} V${r} C0,${r/2} ${r/2},0 ${r},0 Z`;
+    path.setAttribute("d", d);
+    path.setAttribute("fill", config.backgroundColor);
+    svg.appendChild(path);
+    
+    // Get the URL and title from the canvas
+    const url = urlDisplay.value;
+    const title = titleInput.value || 'Untitled Link';
+    
+    // Add the title text
+    const titleText = document.createElementNS(svgNS, "text");
+    titleText.setAttribute("x", config.padding);
+    titleText.setAttribute("y", config.padding + 35);
+    titleText.setAttribute("fill", config.titleFontColor);
+    titleText.setAttribute("font-family", config.titleFontFamily.replace(/"/g, ''));
+    titleText.setAttribute("font-size", config.titleFontSize);
+    titleText.setAttribute("font-weight", "bold");
+    titleText.textContent = truncateText(title, config.textMaxWidth, config.titleFontSize);
+    svg.appendChild(titleText);
+    
+    // Add the URL text
+    const urlText = document.createElementNS(svgNS, "text");
+    urlText.setAttribute("x", config.padding);
+    urlText.setAttribute("y", config.padding + 75);
+    urlText.setAttribute("fill", config.urlFontColor);
+    urlText.setAttribute("font-family", config.urlFontFamily.replace(/"/g, ''));
+    urlText.setAttribute("font-size", config.urlFontSize);
+    urlText.textContent = truncateText(url, config.textMaxWidth, config.urlFontSize);
+    svg.appendChild(urlText);
+    
+    // Add the QR code as an image (embedded base64)
+    const qrCodeX = parseInt(canvas.dataset.qrCodeX);
+    const qrCodeY = parseInt(canvas.dataset.qrCodeY);
+    const qrCodeSize = parseInt(canvas.dataset.qrCodeSize);
+    
+    // Add QR code background with rounded corners
+    const qrBackground = document.createElementNS(svgNS, "rect");
+    qrBackground.setAttribute("x", qrCodeX);
+    qrBackground.setAttribute("y", qrCodeY);
+    qrBackground.setAttribute("width", qrCodeSize);
+    qrBackground.setAttribute("height", qrCodeSize);
+    qrBackground.setAttribute("fill", "#ffffff");
+    qrBackground.setAttribute("rx", "8");
+    qrBackground.setAttribute("ry", "8");
+    svg.appendChild(qrBackground);
+    
+    // Add QR code image
+    const qrImage = document.createElementNS(svgNS, "image");
+    qrImage.setAttribute("x", qrCodeX);
+    qrImage.setAttribute("y", qrCodeY);
+    qrImage.setAttribute("width", qrCodeSize);
+    qrImage.setAttribute("height", qrCodeSize);
+    qrImage.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", canvas.dataset.qrCodeUrl);
+    svg.appendChild(qrImage);
+    
+    // Convert SVG to data URL and download
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svg);
+    const svgBlob = new Blob([svgString], {type: "image/svg+xml"});
+    const svgUrl = URL.createObjectURL(svgBlob);
+    
+    const link = document.createElement('a');
+    link.href = svgUrl;
+    link.download = 'rich-qrcode.svg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(svgUrl);
+});
+
+// Helper function to draw rounded rectangle
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+}
