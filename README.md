@@ -38,3 +38,6 @@ https://www.jsdelivr.com/package/npm/qrcode
 
 simple-notify
 https://github.com/simple-notify/simple-notify
+
+axios
+https://www.jsdelivr.com/package/npm/axios
