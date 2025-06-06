@@ -8,23 +8,12 @@
 
 <h2 class="mb-4" id="image-tools">Image Tools</h2>
 <div class="row">
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ tools['simple-qrcode']['page_name'] }}</h5>
-                <p class="card-text">{{ tools['simple-qrcode']['page_note'] }}</p>
-                <a href="/simple-qrcode" class="btn btn-primary">Try {{ tools['simple-qrcode']['page_name'] }}</a>
-            </div>
+    {% set tool_keys = ['simple-qrcode', 'rich-qrcode'] %}
+    {% for tool_key in tool_keys %}
+        <div class="col-md-6 mb-4">
+        {% set tool = tools[tool_key] %}
+        {% include "shared/tool_card.html" %}
         </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ tools['rich-qrcode']['page_name'] }}</h5>
-                <p class="card-text">{{ tools['rich-qrcode']['page_note'] }}</p>
-                <a href="/rich-qrcode" class="btn btn-primary">Try {{ tools['rich-qrcode']['page_name'] }}</a>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 {% endblock %}

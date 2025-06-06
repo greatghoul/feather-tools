@@ -41,7 +41,8 @@ def get_locale():
 def inject_globals():
     settings = load_settings(get_locale())
     site_data = settings.get('site', {})
-    return dict(flask_env=FLASK_ENV, **site_data)
+    tools = settings.get('tools', {})
+    return dict(flask_env=FLASK_ENV, tools=tools, **site_data)
 
 @app.route('/')
 def home():

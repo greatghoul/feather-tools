@@ -10,12 +10,14 @@ en:
       - "productivity"
   tools:
     simple-qrcode:
+      page_key: "simple-qrcode"
       page_name: "Simple QRCode"
       page_note: "Generate QR code for your URL and customize its colors and size."
       page_tags:
         - "qrcode"
         - "image generator"
     rich-qrcode:
+      page_key: "rich-qrcode"
       page_name: "Rich QRCode"
       page_note: "Generate enhanced QR code cards with title and URL information alongside the QR code."
       page_tags:
