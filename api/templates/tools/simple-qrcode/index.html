@@ -12,16 +12,16 @@
 <h1 class="mb-4">{{ page_name }}</h1>
 <p class="lead mb-5">{{ page_note }}</p>
 
-<div class="row">
+<div class="row row-gap-4 mb-4">
     <div class="col-lg-6">
-        <div class="card mb-4">
+        <div class="card h-100">
             <div class="card-header">
-                <h5 class="mb-0">QR Code Settings</h5>
+                <h5 class="mb-0">Settings</h5>
             </div>
             <div class="card-body">
                 <form id="qrcode-form">
                     <div class="form-group">
-                        <label for="url">URL1</label>
+                        <label for="url">URL</label>
                         <input type="url" class="form-control" id="url" placeholder="Enter URL" value="{{ url }}">
                     </div>
                     
@@ -46,35 +46,16 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary mt-3">Generate QR Code</button>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary mt-3">Generate QR Code</button>
+                    </div>
                 </form>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">How to Use</h5>
-            </div>
-            <div class="card-body">
-                <ol>
-                    <li>Enter the URL or text you want to encode in the QR code</li>
-                    <li>Customize the appearance with colors and size options</li>
-                    <li>Click "Generate QR Code"</li>
-                    <li>Download your custom QR code in PNG or SVG format</li>
-                </ol>
-                <hr/>
-                <div class="card-text">
-                    <a class="btn btn-outline-info" href="javascript:document.location='{{ request.url_root }}simple-qrcode?url='+encodeURIComponent(document.location.href);">{{ page_name }}</a>
-                    <small class="d-block mt-2 text-muted">
-                        Drag the bookmarklet above to your bookmarks bar, on any page, click it to generate its QR code.
-                    </small>
-                </div>
             </div>
         </div>
     </div>
     
-    <div class="col-lg-6 mt-lg-0">
-        <div class="card mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
             <div class="card-header">
                 <h5 class="mb-0">Preview</h5>
             </div>
@@ -83,8 +64,47 @@
                     <div id="qrcode-preview"></div>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-outline-secondary" id="download-png">Download PNG</button>
-                    <button class="btn btn-outline-secondary" id="download-svg">Download SVG</button>
+                    <button class="btn btn-outline-success" id="download-png">
+                        <i class="bi bi-download me-1"></i> Download PNG
+                    </button>
+                    <button class="btn btn-outline-success" id="download-svg">
+                        <i class="bi bi-download me-1"></i> Download SVG
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-gap-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">How to Use</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li><strong>Enter the URL</strong> you want to encode in the QR code</li>
+                    <li><strong>Customize the appearance</strong> with colors and size options</li>
+                    <li>Click <strong>"Generate QR Code"</strong></li>
+                    <li>Right-click the preview image to copy or save, or use the <strong>Download PNG</strong> or <strong>Download SVG</strong> buttons.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">Bookmarklet</h5>
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <p>Drag the bookmarklet above to your bookmarks bar, on any page, click it to generate its QR code.</p>
+                    <a class="btn btn-outline-primary" href="javascript:document.location='{{ request.url_root }}simple-qrcode?url='+encodeURIComponent(document.location.href);">{{ page_name }}</a>
+                    <div class="mt-3 text-muted small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        This will open the Rich QRCode tool with the current page's URL.
+                    </div>
                 </div>
             </div>
         </div>
