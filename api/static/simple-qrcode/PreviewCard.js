@@ -5,7 +5,6 @@ const DEFAULT_URL = 'https://www.feather-tools.com/simple-qrcode';
 
 const PreviewCard = ({ settings, creating, onCreated }) => {
     const [image, setImage] = useState(null);
-    const [canvas, setCanvas] = useState(null);
 
     const url = settings.url || DEFAULT_URL;
     const options = {
@@ -19,7 +18,6 @@ const PreviewCard = ({ settings, creating, onCreated }) => {
 
     useEffect(() => {
         QRCode.toCanvas(url, options).then(canvas => {
-            setCanvas(canvas);
             setImage(canvas.toDataURL());
             onCreated();
         });
