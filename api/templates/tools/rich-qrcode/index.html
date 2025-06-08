@@ -3,14 +3,6 @@
 
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='rich-qrcode/styles.css') }}">
-    <script type="importmap">
-    {
-        "imports": {
-            "qrcode": "https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm",
-            "axios": "https://cdn.jsdelivr.net/npm/axios@1.9.0/+esm"
-        }
-    }
-    </script>
 {% endblock %}
 
 {% block content %}

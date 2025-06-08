@@ -41,3 +41,6 @@ https://github.com/simple-notify/simple-notify
 
 axios
 https://www.jsdelivr.com/package/npm/axios
+
+bootstrap
+https://getbootstrap.com/docs/5.3/getting-started/introduction/

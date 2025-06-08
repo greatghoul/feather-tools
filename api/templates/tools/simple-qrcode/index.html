@@ -12,67 +12,10 @@
 <h1 class="mb-4">{{ page_name }}</h1>
 <p class="lead mb-5">{{ page_note }}</p>
 
-<div class="row row-gap-4 mb-4">
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="mb-0">Settings</h5>
-            </div>
-            <div class="card-body">
-                <form id="qrcode-form">
-                    <div class="form-group">
-                        <label for="url">URL</label>
-                        <input type="url" class="form-control" id="url" placeholder="Enter URL" value="{{ url }}">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="size">Size (px)</label>
-                        <input type="range" class="form-range" id="size" min="128" max="512" value="256" step="8">
-                        <div class="text-end"><small class="text-muted" id="size-value">256px</small></div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="foreground">Foreground Color</label>
-                                <input type="color" class="form-control form-control-color" id="foreground" value="#000000">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="background">Background Color</label>
-                                <input type="color" class="form-control form-control-color" id="background" value="#FFFFFF">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary mt-3">Generate QR Code</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="mb-0">Preview</h5>
-            </div>
-            <div class="card-body text-center">
-                <div class="d-flex justify-content-center mb-4">
-                    <div id="qrcode-preview"></div>
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-outline-success" id="download-png">
-                        <i class="bi bi-download me-1"></i> Download PNG
-                    </button>
-                    <button class="btn btn-outline-success" id="download-svg">
-                        <i class="bi bi-download me-1"></i> Download SVG
-                    </button>
-                </div>
-            </div>
-        </div>
+<div id="app">
+    <div class="d-flex align-items-center mb-4">
+        <strong role="status">Loading...</strong>
+        <div class="spinner-border ms-auto" aria-hidden="true"></div>
     </div>
 </div>
 
