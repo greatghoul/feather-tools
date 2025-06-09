@@ -44,3 +44,6 @@ https://www.jsdelivr.com/package/npm/axios
 
 bootstrap
 https://getbootstrap.com/docs/5.3/getting-started/introduction/
+
+preact  
+https://preactjs.com/guide/v10/getting-started

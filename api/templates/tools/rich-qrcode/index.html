@@ -6,8 +6,10 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="mb-4">{{ page_name }}</h1>
-<p class="lead mb-5">{{ page_note }}</p>
+    <h1 class="mb-4">{{ page_name }}</h1>
+    <p class="lead mb-5">{{ page_note }}</p>
+
+    {% include 'shared/app.html' %}
 
 <form id="rich-qrcode-form" class="mb-4">
   <div class="url-input-container">

@@ -1,5 +1,8 @@
 import QRCode from 'qrcode';
 import axios from 'axios';
+import { html, render, useState, useEffect } from 'preact';
+import { StoreContext } from '../_shared/StoreContext.js';
+import LinkFetchForm from './LinkFetchForm.js';
 
 // Get form elements
 const form = document.getElementById('rich-qrcode-form');
@@ -418,3 +421,26 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
     ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
 }
+
+function App() {
+    const [busy, setBusy] = useState(false);
+    const [url, setUrl] = useState(null);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        setUrl(params.get('url'));
+    }, [url]);
+
+    const store = {
+        busy,
+        setBusy,
+    };
+
+    return html`
+        <${StoreContext.Provider} value=${store}>
+            <${LinkFetchForm} url=${url} />
+        <//>
+    `;
+}
+
+render(html`<${App} />`, document.getElementById('app'));
