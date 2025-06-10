@@ -3,6 +3,7 @@ import axios from 'axios';
 import { html, render, useState, useEffect } from 'preact';
 import { StoreContext } from '../_shared/StoreContext.js';
 import LinkFetchForm from './LinkFetchForm.js';
+import SettingCard from './SettingCard.js';
 
 // Get form elements
 const form = document.getElementById('rich-qrcode-form');
@@ -436,6 +437,11 @@ function App() {
             <div>
                 <${LinkFetchForm} onFetched=${setLinkInfo} />
                 <pre>${JSON.stringify(linkInfo, '', 2)}</pre>
+                <div class="row row-gap-4 mb-4">
+                    <div class="col-lg-6">
+                        <${SettingCard} linkInfo=${linkInfo} onGenerate=${() => true} />
+                    </div>
+                </div>
             </div>
         <//>
     `;
