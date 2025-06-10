@@ -1,13 +1,20 @@
-import { html, useState, useEffect } from 'preact';
+import { html, useState, useEffect, useContext } from 'preact';
+import { useStore } from '../_shared/StoreContext.js';
 
 // SettingCard component for QR code settings panel
 // Props:
 //   linkInfo: { title: string, url: string }
 //   onGenerate: function - callback for generate button click
 //   loading: boolean - loading state
-const SettingCard = ({ linkInfo, onGenerate, loading }) => {
+const SettingCard = ({ linkInfo, onGenerate }) => {
     const [title, setTitle] = useState('');
     const [url, setUrl] = useState('');
+    const { busy, setBusy } = useStore();
+
+    const handleSubmit = () => {
+        setBusy(true);
+        onGenerate({ title, url });
+    };
 
     useEffect(() => {
         setTitle(linkInfo?.title || '');
@@ -29,7 +36,7 @@ const SettingCard = ({ linkInfo, onGenerate, loading }) => {
                         placeholder="Title will appear here"
                         value=${title}
                         onInput=${e => setTitle(e.target.value)}
-                        disabled=${loading}
+                        disabled=${busy}
                     />
                 </div>
                 <div class="form-group mb-3">
@@ -41,7 +48,7 @@ const SettingCard = ({ linkInfo, onGenerate, loading }) => {
                         placeholder="https://example.com/"
                         value=${url}
                         onInput=${e => setUrl(e.target.value)}
-                        disabled=${loading}
+                        disabled=${busy}
                     />
                 </div>
                 <div class="d-grid gap-2">
@@ -49,12 +56,12 @@ const SettingCard = ({ linkInfo, onGenerate, loading }) => {
                         type="button"
                         class="btn btn-primary"
                         id="generate-btn"
-                        onClick=${onGenerate}
-                        disabled=${loading}
+                        onClick=${handleSubmit}
+                        disabled=${busy}
                     >
                         <span class="generate-btn-text">Generate QR Code Card</span>
                         <span
-                            class="spinner-border spinner-border-sm ms-1${loading ? '' : ' d-none'}"
+                            class="spinner-border spinner-border-sm ms-1${busy ? '' : ' d-none'}"
                             role="status"
                             aria-hidden="true"
                             id="generate-spinner"
