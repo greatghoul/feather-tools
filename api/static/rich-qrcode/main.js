@@ -424,12 +424,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 
 function App() {
     const [busy, setBusy] = useState(false);
-    const [url, setUrl] = useState(null);
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        setUrl(params.get('url'));
-    }, [url]);
+    const [linkInfo, setLinkInfo] = useState({ title: '', url: '' });
 
     const store = {
         busy,
@@ -438,7 +433,10 @@ function App() {
 
     return html`
         <${StoreContext.Provider} value=${store}>
-            <${LinkFetchForm} url=${url} />
+            <div>
+                <${LinkFetchForm} onFetched=${setLinkInfo} />
+                <pre>${JSON.stringify(linkInfo, '', 2)}</pre>
+            </div>
         <//>
     `;
 }

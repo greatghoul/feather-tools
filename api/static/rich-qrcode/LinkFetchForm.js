@@ -1,13 +1,49 @@
-import { html, render, useState, useContext } from 'preact';
+import { html, useState, useEffect } from 'preact';
 import { useStore } from '../_shared/StoreContext.js';
+import { notify, defaultText } from '../_shared/utils.js';
+import axios from 'axios';
 
-const LinkFetchForm = ({ url }) =>  {
+const LinkFetchForm = ({ onFetched }) =>  {
     const { busy, setBusy } = useStore();
     const [fetching, setFetching] = useState(false);
+    const [url, setUrl] = useState(null);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        setUrl(params.get('url'));
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Disable all form elements during fetch
         setBusy(true);
+        setFetching(true);
+
+        const params = {
+            url: defaultText(url, 'https://feather-tools.com/rich-qrcode'),
+        };
+
+        axios.get('/api/link-meta', { params })
+            .then(response => {
+                const data = response.data;
+                console.log('Metadata received:', data);
+                
+                // Show success message
+                notify('Fetched successfully', '', 'success');
+                
+                onFetched(data);
+            })
+            .catch(error => {
+                console.error('Error fetching metadata:', error);
+                
+                // Show error message
+                notify('Failed to fetch', 'Please check the URL and try again.', 'error');
+            })
+            .finally(() => {
+                setBusy(false);
+                setFetching(false);
+            });
     };
 
     return html`
@@ -20,6 +56,7 @@ const LinkFetchForm = ({ url }) =>  {
                         id="url-input"
                         placeholder="https://example.com/"
                         value=${url}
+                        onInput=${e => setUrl(e.target.value)}
                         aria-label="URL to create Rich QR code for"
                         disabled=${busy}
                     />
