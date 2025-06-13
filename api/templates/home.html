@@ -3,17 +3,22 @@
 {% block title %}Home - Feather Tools{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Welcome to Feather Tools</h1>
-<p class="lead mb-5">All our tools are <strong>free</strong> and <strong>lightweight</strong>, designed to help you get things done quickly and efficiently.</p>
+    <h1 class="mb-4">Welcome to Feather Tools</h1>
+    <p class="lead mb-5">
+        All our tools are <strong>free</strong>, 
+        <strong>lightweight</strong>, 
+        and <strong><a href="https://github.com/greatghoul/feather-tools" target="_blank">open source</a></strong>, 
+        designed to help you get things done quickly and efficiently.
+    </p>
 
-<h2 class="mb-4" id="image-tools">Image Tools</h2>
-<div class="row">
-    {% set tool_keys = ['simple-qrcode', 'rich-qrcode'] %}
-    {% for tool_key in tool_keys %}
-        <div class="col-md-6 mb-4">
-        {% set tool = tools[tool_key] %}
-        {% include "shared/tool_card.html" %}
-        </div>
-    {% endfor %}
-</div>
+    <h2 class="mb-4" id="image-tools">Image Tools</h2>
+    <div class="row">
+        {% set tool_keys = ['simple-qrcode', 'rich-qrcode'] %}
+        {% for tool_key in tool_keys %}
+            <div class="col-md-6 mb-4">
+            {% set tool = tools[tool_key] %}
+            {% include "shared/tool_card.html" %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

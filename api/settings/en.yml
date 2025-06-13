@@ -1,13 +1,14 @@
 en:
   site:
     site_name: "Feather Tools"
-    site_note: "All our tools are free and lightweight, designed to help you get things done quickly and efficiently."
-    site_note_html: "All our tools are <strong>free</strong> and <strong>lightweight</strong>, designed to help you get things done quickly and efficiently."
+    site_note: "All our tools are free, lightweight, and open source, designed to help you get things done quickly and efficiently."
     site_tags:
       - "online tools"
       - "free"
       - "lightweight"
+      - "open source"
       - "productivity"
+      - "image tools"
   tools:
     simple-qrcode:
       page_key: "simple-qrcode"
