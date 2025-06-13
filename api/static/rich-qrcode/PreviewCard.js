@@ -93,7 +93,7 @@ const drawEmptyCard = (ctx) => {
     ctx.fillText(truncatedPlaceholder, config.padding, 50);
 };
 
-const PreviewCard = ({ linkInfo, onGenerated }) => {
+const PreviewCard = ({ linkInfo }) => {
     const canvasRef = useRef(null);
     const [qrCodeData, setQrCodeData] = useState(null);
     const { busy, setBusy } = useStore();
@@ -160,9 +160,6 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
                 });
                 
                 setBusy(false);
-                if (onGenerated) {
-                    onGenerated();
-                }
             };
             
             qrImage.src = qrDataUrl;
