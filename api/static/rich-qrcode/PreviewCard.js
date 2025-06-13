@@ -28,8 +28,8 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
     const [qrCodeData, setQrCodeData] = useState(null);
     const { busy, setBusy } = useStore();
 
-    const url = linkInfo?.url || DEFAULT_URL;
-    const title = linkInfo?.title || 'Enter a URL and click Generate';
+    const url = (linkInfo && linkInfo.url) || DEFAULT_URL;
+    const title = (linkInfo && linkInfo.title) || 'Enter a URL and click Generate';
 
     // Helper function to draw rounded rectangle
     const drawRoundedRect = (ctx, x, y, width, height, radius) => {
