@@ -25,10 +25,8 @@ const config = {
 
 const PreviewCard = ({ linkInfo, onGenerated }) => {
     const canvasRef = useRef(null);
-    const [canvasReady, setCanvasReady] = useState(false);
     const [qrCodeData, setQrCodeData] = useState(null);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const { busy } = useStore();
+    const { busy, setBusy } = useStore();
 
     const url = linkInfo?.url || DEFAULT_URL;
     const title = linkInfo?.title || 'Enter a URL and click Generate';
@@ -107,8 +105,6 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
     const generateQRCodeCard = (ctx) => {
         console.log('Generating QR code card for:', url, 'with title:', title);
         
-        setIsGenerating(true);
-        
         // Clear canvas
         ctx.clearRect(0, 0, config.width, config.height);
         
@@ -161,8 +157,7 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
                     size: config.qrCodeSize
                 });
                 
-                setCanvasReady(true);
-                setIsGenerating(false);
+                setBusy(false);
                 if (onGenerated) {
                     onGenerated();
                 }
@@ -172,7 +167,7 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
         })
         .catch(error => {
             console.error('Error generating QR code:', error);
-            setIsGenerating(false);
+            setBusy(false);
         });
     };
 
@@ -189,7 +184,6 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
         } else {
             // Draw empty card when no URL is provided
             drawEmptyCard(ctx);
-            setCanvasReady(false);
             setQrCodeData(null);
         }
     }, [linkInfo]);
@@ -307,14 +301,14 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
                     <div class="btn-group">
                         <button 
                             class="btn btn-outline-success" 
-                            disabled=${busy || !canvasReady}
+                            disabled=${busy || !qrCodeData}
                             onClick=${handleDownloadPng}
                         >
                             <i class="bi bi-download me-1"></i> Download PNG
                         </button>
                         <button 
                             class="btn btn-outline-success" 
-                            disabled=${busy || !canvasReady}
+                            disabled=${busy || !qrCodeData}
                             onClick=${handleDownloadSvg}
                         >
                             <i class="bi bi-download me-1"></i> Download SVG
