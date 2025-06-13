@@ -13,6 +13,13 @@ const LinkFetchForm = ({ onFetched }) =>  {
         setUrl(params.get('url'));
     }, []);
 
+    // Monitor busy state and sync fetching state
+    useEffect(() => {
+        if (!busy) {
+            setFetching(false);
+        }
+    }, [busy]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
