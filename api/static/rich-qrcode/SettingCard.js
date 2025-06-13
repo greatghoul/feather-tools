@@ -13,14 +13,19 @@ const SettingCard = ({ linkInfo, onGenerate }) => {
     const { busy, setBusy } = useStore();
 
     const handleSubmit = () => {
+        // Don't submit if URL is empty
+        if (!url) {
+            return;
+        }
+        
         setSubmitting(true);
         setBusy(true);
         onGenerate({ title, url });
     };
 
     useEffect(() => {
-        setTitle(linkInfo?.title || '');
-        setUrl(linkInfo?.url || '');
+        setTitle((linkInfo && linkInfo.title) || '');
+        setUrl((linkInfo && linkInfo.url) || '');
     }, [linkInfo]);
 
     // Monitor busy state and reset submitting when busy becomes false
@@ -56,7 +61,7 @@ const SettingCard = ({ linkInfo, onGenerate }) => {
                         id="url-display"
                         placeholder="https://example.com/"
                         value=${url}
-                        onInput=${e => setUrl(e.target.value)}
+                        onInput=${e => setUrl(e.target.value.trim())}
                         disabled=${busy}
                     />
                 </div>
@@ -66,7 +71,7 @@ const SettingCard = ({ linkInfo, onGenerate }) => {
                         class="btn btn-primary"
                         id="generate-btn"
                         onClick=${handleSubmit}
-                        disabled=${busy}
+                        disabled=${busy || !url}
                     >
                         <span class="generate-btn-text">${submitting ? 'Generating...' : 'Generate QR Code Card'}</span>
                         <span
