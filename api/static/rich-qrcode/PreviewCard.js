@@ -1,5 +1,6 @@
 import { html, useState, useEffect, useRef } from 'preact';
 import QRCode from 'qrcode';
+import { useStore } from '../_shared/StoreContext.js';
 
 const DEFAULT_URL = 'https://www.feather-tools.com/rich-qrcode';
 
@@ -22,11 +23,12 @@ const config = {
     borderRadius: 10
 };
 
-const PreviewCard = ({ linkInfo, generating, shouldGenerate, onGenerated }) => {
+const PreviewCard = ({ linkInfo, onGenerated }) => {
     const canvasRef = useRef(null);
     const [canvasReady, setCanvasReady] = useState(false);
     const [qrCodeData, setQrCodeData] = useState(null);
     const [isGenerating, setIsGenerating] = useState(false);
+    const { busy } = useStore();
 
     const url = linkInfo?.url || DEFAULT_URL;
     const title = linkInfo?.title || 'Enter a URL and click Generate';
@@ -181,22 +183,16 @@ const PreviewCard = ({ linkInfo, generating, shouldGenerate, onGenerated }) => {
 
         const ctx = canvas.getContext('2d');
         
-        // Always draw empty card on component mount or when linkInfo changes
-        drawEmptyCard(ctx);
-        setCanvasReady(false);
-        setQrCodeData(null);
-    }, [linkInfo]);
-
-    // Auto-generate when shouldGenerate is true
-    useEffect(() => {
-        if (shouldGenerate && linkInfo?.url) {
-            const canvas = canvasRef.current;
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                generateQRCodeCard(ctx);
-            }
+        if (linkInfo && linkInfo.url) {
+            // Generate QR code when linkInfo has a URL
+            generateQRCodeCard(ctx);
+        } else {
+            // Draw empty card when no URL is provided
+            drawEmptyCard(ctx);
+            setCanvasReady(false);
+            setQrCodeData(null);
         }
-    }, [shouldGenerate, linkInfo]);
+    }, [linkInfo]);
 
 
 
@@ -311,14 +307,14 @@ const PreviewCard = ({ linkInfo, generating, shouldGenerate, onGenerated }) => {
                     <div class="btn-group">
                         <button 
                             class="btn btn-outline-success" 
-                            disabled=${generating || !canvasReady}
+                            disabled=${busy || !canvasReady}
                             onClick=${handleDownloadPng}
                         >
                             <i class="bi bi-download me-1"></i> Download PNG
                         </button>
                         <button 
                             class="btn btn-outline-success" 
-                            disabled=${generating || !canvasReady}
+                            disabled=${busy || !canvasReady}
                             onClick=${handleDownloadSvg}
                         >
                             <i class="bi bi-download me-1"></i> Download SVG

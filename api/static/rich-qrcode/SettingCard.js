@@ -9,9 +9,11 @@ import { useStore } from '../_shared/StoreContext.js';
 const SettingCard = ({ linkInfo, onGenerate }) => {
     const [title, setTitle] = useState('');
     const [url, setUrl] = useState('');
+    const [submitting, setSubmitting] = useState(false);
     const { busy, setBusy } = useStore();
 
     const handleSubmit = () => {
+        setSubmitting(true);
         setBusy(true);
         onGenerate({ title, url });
     };
@@ -20,6 +22,13 @@ const SettingCard = ({ linkInfo, onGenerate }) => {
         setTitle(linkInfo?.title || '');
         setUrl(linkInfo?.url || '');
     }, [linkInfo]);
+
+    // Monitor busy state and reset submitting when busy becomes false
+    useEffect(() => {
+        if (!busy) {
+            setSubmitting(false);
+        }
+    }, [busy]);
 
     return html`
         <div class="card h-100">
@@ -59,9 +68,9 @@ const SettingCard = ({ linkInfo, onGenerate }) => {
                         onClick=${handleSubmit}
                         disabled=${busy}
                     >
-                        <span class="generate-btn-text">Generate QR Code Card</span>
+                        <span class="generate-btn-text">${submitting ? 'Generating...' : 'Generate QR Code Card'}</span>
                         <span
-                            class="spinner-border spinner-border-sm ms-1${busy ? '' : ' d-none'}"
+                            class="spinner-border spinner-border-sm ms-1${submitting ? '' : ' d-none'}"
                             role="status"
                             aria-hidden="true"
                             id="generate-spinner"
