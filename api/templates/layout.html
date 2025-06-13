@@ -51,6 +51,16 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.6/dist/simple-notify.min.js"
         integrity="sha256-5oyRx5pR3Tpi4tN9pTtnN5czAU1ElI2sUbaRQsxjAEY="
         crossorigin="anonymous"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "preact": "https://esm.sh/htm/preact/standalone",
+            "qrcode": "https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm",
+            "axios": "https://cdn.jsdelivr.net/npm/axios@1.9.0/+esm"
+        }
+    }
+    </script>
+
     {% block head %}{% endblock %}
 </head>
 

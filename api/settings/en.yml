@@ -12,7 +12,7 @@ en:
     simple-qrcode:
       page_key: "simple-qrcode"
       page_name: "Simple QRCode"
-      page_note: "Generate QR code for your URL and customize its colors and size."
+      page_note: "Generate QR code for your URL and customize its colors."
       page_tags:
         - "qrcode"
         - "image generator"
