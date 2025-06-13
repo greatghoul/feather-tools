@@ -7,6 +7,8 @@ import yaml
 
 # Import the Blueprint using a relative import
 from .api import api_bp
+import importlib
+import pathlib
 
 app = Flask(__name__)
 app.register_blueprint(api_bp)
@@ -14,10 +16,11 @@ app.register_blueprint(api_bp)
 DEFAULT_LOCALE = 'en'
 SETTINGS_DIR = os.path.join(app.root_path, 'settings')
 FLASK_ENV = os.environ.get('FLASK_ENV', 'development')
+
 if app.debug:
-    print("App is running in debug mode")
-    app.config['USE_RELOADER'] = True
-    print(f"App reloader active: {app.run.__self__.use_reloader if hasattr(app.run.__self__, 'use_reloader') else 'Unknown'}")
+    @app.before_request
+    def clear_settings_cache_on_debug():
+        load_settings.cache_clear()
 
 Minify(app=app, html=False, js=True, cssless=True)
 
