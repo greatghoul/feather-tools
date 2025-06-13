@@ -198,14 +198,7 @@ const PreviewCard = ({ linkInfo, generating, shouldGenerate, onGenerated }) => {
         }
     }, [shouldGenerate, linkInfo]);
 
-    // Handle generate button click
-    const handleGenerate = () => {
-        const canvas = canvasRef.current;
-        if (!canvas || !linkInfo?.url) return;
 
-        const ctx = canvas.getContext('2d');
-        generateQRCodeCard(ctx);
-    };
 
     const handleDownloadPng = () => {
         if (!canvasRef.current || !qrCodeData) return;
@@ -312,22 +305,6 @@ const PreviewCard = ({ linkInfo, generating, shouldGenerate, onGenerated }) => {
                 <div class="text-muted small mb-3">
                     <i class="bi bi-info-circle me-1"></i>
                     Right click to copy/save the image, or use the download buttons below.
-                </div>
-                
-                <div class="d-flex justify-content-center mb-3">
-                    <button 
-                        class="btn btn-primary" 
-                        disabled=${isGenerating || generating || !linkInfo?.url}
-                        onClick=${handleGenerate}
-                    >
-                        ${(isGenerating || generating) ? html`
-                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            Generating...
-                        ` : html`
-                            <i class="bi bi-qr-code me-1"></i>
-                            Generate QR Code Card
-                        `}
-                    </button>
                 </div>
                 
                 <div class="d-flex justify-content-center mt-3">
