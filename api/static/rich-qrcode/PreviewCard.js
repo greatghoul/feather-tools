@@ -22,10 +22,11 @@ const config = {
     borderRadius: 10
 };
 
-const PreviewCard = ({ linkInfo, generating, onGenerated }) => {
+const PreviewCard = ({ linkInfo, generating, shouldGenerate, onGenerated }) => {
     const canvasRef = useRef(null);
     const [canvasReady, setCanvasReady] = useState(false);
     const [qrCodeData, setQrCodeData] = useState(null);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const url = linkInfo?.url || DEFAULT_URL;
     const title = linkInfo?.title || 'Enter a URL and click Generate';
@@ -104,6 +105,8 @@ const PreviewCard = ({ linkInfo, generating, onGenerated }) => {
     const generateQRCodeCard = (ctx) => {
         console.log('Generating QR code card for:', url, 'with title:', title);
         
+        setIsGenerating(true);
+        
         // Clear canvas
         ctx.clearRect(0, 0, config.width, config.height);
         
@@ -157,6 +160,7 @@ const PreviewCard = ({ linkInfo, generating, onGenerated }) => {
                 });
                 
                 setCanvasReady(true);
+                setIsGenerating(false);
                 if (onGenerated) {
                     onGenerated();
                 }
@@ -166,6 +170,7 @@ const PreviewCard = ({ linkInfo, generating, onGenerated }) => {
         })
         .catch(error => {
             console.error('Error generating QR code:', error);
+            setIsGenerating(false);
         });
     };
 
@@ -176,14 +181,31 @@ const PreviewCard = ({ linkInfo, generating, onGenerated }) => {
 
         const ctx = canvas.getContext('2d');
         
-        if (linkInfo && linkInfo.url) {
-            generateQRCodeCard(ctx);
-        } else {
-            drawEmptyCard(ctx);
-            setCanvasReady(false);
-            setQrCodeData(null);
-        }
+        // Always draw empty card on component mount or when linkInfo changes
+        drawEmptyCard(ctx);
+        setCanvasReady(false);
+        setQrCodeData(null);
     }, [linkInfo]);
+
+    // Auto-generate when shouldGenerate is true
+    useEffect(() => {
+        if (shouldGenerate && linkInfo?.url) {
+            const canvas = canvasRef.current;
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                generateQRCodeCard(ctx);
+            }
+        }
+    }, [shouldGenerate, linkInfo]);
+
+    // Handle generate button click
+    const handleGenerate = () => {
+        const canvas = canvasRef.current;
+        if (!canvas || !linkInfo?.url) return;
+
+        const ctx = canvas.getContext('2d');
+        generateQRCodeCard(ctx);
+    };
 
     const handleDownloadPng = () => {
         if (!canvasRef.current || !qrCodeData) return;
@@ -287,10 +309,27 @@ const PreviewCard = ({ linkInfo, generating, onGenerated }) => {
                         style="max-width: 100%; height: auto; border: 1px solid #dee2e6; border-radius: 8px;"
                     />
                 </div>
-                <div class="text-muted small mb-2">
+                <div class="text-muted small mb-3">
                     <i class="bi bi-info-circle me-1"></i>
                     Right click to copy/save the image, or use the download buttons below.
                 </div>
+                
+                <div class="d-flex justify-content-center mb-3">
+                    <button 
+                        class="btn btn-primary" 
+                        disabled=${isGenerating || generating || !linkInfo?.url}
+                        onClick=${handleGenerate}
+                    >
+                        ${(isGenerating || generating) ? html`
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Generating...
+                        ` : html`
+                            <i class="bi bi-qr-code me-1"></i>
+                            Generate QR Code Card
+                        `}
+                    </button>
+                </div>
+                
                 <div class="d-flex justify-content-center mt-3">
                     <div class="btn-group">
                         <button 

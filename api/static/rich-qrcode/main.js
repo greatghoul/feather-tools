@@ -428,6 +428,7 @@ function App() {
     const [busy, setBusy] = useState(false);
     const [linkInfo, setLinkInfo] = useState({ title: '', url: '' });
     const [generating, setGenerating] = useState(false);
+    const [shouldGenerate, setShouldGenerate] = useState(false);
 
     const store = {
         busy,
@@ -437,10 +438,12 @@ function App() {
     const handleGenerate = (info) => {
         setGenerating(true);
         setLinkInfo(info);
+        setShouldGenerate(true);
     };
 
     const handleGenerated = () => {
         setGenerating(false);
+        setShouldGenerate(false);
     };
 
     return html`
@@ -455,6 +458,7 @@ function App() {
                         <${PreviewCard} 
                             linkInfo=${linkInfo} 
                             generating=${generating} 
+                            shouldGenerate=${shouldGenerate}
                             onGenerated=${handleGenerated} 
                         />
                     </div>
