@@ -26,3 +26,12 @@ en:
         - "image generator"
         - "card generator"
         - "link sharing"
+    batch-url-cleaner:
+      page_key: "batch-url-cleaner"
+      page_name: "Batch URL Cleaner"
+      page_note: "Clean and process multiple URLs at once by removing tracking parameters and unwanted query strings."
+      page_tags:
+        - "url cleaner"
+        - "batch processing"
+        - "privacy"
+        - "link optimization"
