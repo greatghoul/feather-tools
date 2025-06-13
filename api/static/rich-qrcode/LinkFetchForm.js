@@ -45,7 +45,11 @@ const LinkFetchForm = ({ onFetched }) =>  {
                 console.error('Error fetching metadata:', error);
                 
                 // Show error message
-                notify('Failed to fetch', 'Please check the URL and try again.', 'error');
+                notify('Failed to fetch link title', 'You can provide it by yourself.', 'error');
+                onFetched({
+                    title: 'Untitled Page',
+                    url: url
+                })
             })
             .finally(() => {
                 setBusy(false);

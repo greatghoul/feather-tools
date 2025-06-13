@@ -1,11 +1,7 @@
-import os
-import sys
 import pytest
 import json
 import requests
 import responses
-from unittest import mock
-from urllib.parse import urlparse
 
 # Import the app
 from api.index import app
