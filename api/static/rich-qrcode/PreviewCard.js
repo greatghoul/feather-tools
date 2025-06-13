@@ -23,6 +23,76 @@ const config = {
     borderRadius: 10
 };
 
+// Helper function to draw rounded rectangle
+const drawRoundedRect = (ctx, x, y, width, height, radius) => {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+};
+
+// Function to truncate text with ellipsis
+const truncateText = (ctx, text, maxWidth, fontSize) => {
+    // Set the appropriate font for measurement
+    if (fontSize === config.titleFontSize) {
+        ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
+    } else {
+        ctx.font = `${fontSize}px ${config.urlFontFamily}`;
+    }
+    
+    if (ctx.measureText(text).width <= maxWidth) {
+        return text;
+    }
+    
+    let truncated = text;
+    while (ctx.measureText(truncated + '...').width > maxWidth && truncated.length > 0) {
+        truncated = truncated.slice(0, -1);
+    }
+    
+    return truncated + '...';
+};
+
+// Function to draw empty card
+const drawEmptyCard = (ctx) => {
+    // Clear canvas
+    ctx.clearRect(0, 0, config.width, config.height);
+    
+    // Draw rounded rectangle background
+    ctx.fillStyle = config.backgroundColor;
+    drawRoundedRect(ctx, 0, 0, config.width, config.height, config.borderRadius);
+    ctx.fill();
+    
+    // Calculate QR code position (right side)
+    const qrCodeX = config.width - config.padding - config.qrCodeSize;
+    
+    // Draw QR code area placeholder with rounded corners
+    ctx.fillStyle = config.accentColor;
+    const qrRadius = 8;
+    drawRoundedRect(ctx, qrCodeX, config.padding, config.qrCodeSize, config.qrCodeSize, qrRadius);
+    ctx.fill();
+    
+    // Draw QR code placeholder icon
+    ctx.fillStyle = '#bbbbbb';
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('QR', qrCodeX + config.qrCodeSize/2, config.padding + config.qrCodeSize/2 + 8);
+    ctx.textAlign = 'left';
+    
+    // Draw placeholder text
+    ctx.fillStyle = config.titleFontColor;
+    ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
+    const placeholderText = 'Enter a URL and click Generate';
+    const truncatedPlaceholder = truncateText(ctx, placeholderText, config.textMaxWidth, config.titleFontSize);
+    ctx.fillText(truncatedPlaceholder, config.padding, 50);
+};
+
 const PreviewCard = ({ linkInfo, onGenerated }) => {
     const canvasRef = useRef(null);
     const [qrCodeData, setQrCodeData] = useState(null);
@@ -32,76 +102,6 @@ const PreviewCard = ({ linkInfo, onGenerated }) => {
     const url = (linkInfo && linkInfo.url) || DEFAULT_URL;
     // If URL exists, use title (even if empty), otherwise show placeholder text
     const title = (linkInfo && linkInfo.url) ? (linkInfo.title || '') : 'Enter a URL and click Generate';
-
-    // Helper function to draw rounded rectangle
-    const drawRoundedRect = (ctx, x, y, width, height, radius) => {
-        ctx.beginPath();
-        ctx.moveTo(x + radius, y);
-        ctx.lineTo(x + width - radius, y);
-        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-        ctx.lineTo(x + width, y + height - radius);
-        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-        ctx.lineTo(x + radius, y + height);
-        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-        ctx.lineTo(x, y + radius);
-        ctx.quadraticCurveTo(x, y, x + radius, y);
-        ctx.closePath();
-    };
-
-    // Function to truncate text with ellipsis
-    const truncateText = (ctx, text, maxWidth, fontSize) => {
-        // Set the appropriate font for measurement
-        if (fontSize === config.titleFontSize) {
-            ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
-        } else {
-            ctx.font = `${fontSize}px ${config.urlFontFamily}`;
-        }
-        
-        if (ctx.measureText(text).width <= maxWidth) {
-            return text;
-        }
-        
-        let truncated = text;
-        while (ctx.measureText(truncated + '...').width > maxWidth && truncated.length > 0) {
-            truncated = truncated.slice(0, -1);
-        }
-        
-        return truncated + '...';
-    };
-
-    // Function to draw empty card
-    const drawEmptyCard = (ctx) => {
-        // Clear canvas
-        ctx.clearRect(0, 0, config.width, config.height);
-        
-        // Draw rounded rectangle background
-        ctx.fillStyle = config.backgroundColor;
-        drawRoundedRect(ctx, 0, 0, config.width, config.height, config.borderRadius);
-        ctx.fill();
-        
-        // Calculate QR code position (right side)
-        const qrCodeX = config.width - config.padding - config.qrCodeSize;
-        
-        // Draw QR code area placeholder with rounded corners
-        ctx.fillStyle = config.accentColor;
-        const qrRadius = 8;
-        drawRoundedRect(ctx, qrCodeX, config.padding, config.qrCodeSize, config.qrCodeSize, qrRadius);
-        ctx.fill();
-        
-        // Draw QR code placeholder icon
-        ctx.fillStyle = '#bbbbbb';
-        ctx.font = '24px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('QR', qrCodeX + config.qrCodeSize/2, config.padding + config.qrCodeSize/2 + 8);
-        ctx.textAlign = 'left';
-        
-        // Draw placeholder text
-        ctx.fillStyle = config.titleFontColor;
-        ctx.font = `bold ${config.titleFontSize}px ${config.titleFontFamily}`;
-        const placeholderText = 'Enter a URL and click Generate';
-        const truncatedPlaceholder = truncateText(ctx, placeholderText, config.textMaxWidth, config.titleFontSize);
-        ctx.fillText(truncatedPlaceholder, config.padding, 50);
-    };
 
     // Function to generate QR code card
     const generateQRCodeCard = (ctx) => {
