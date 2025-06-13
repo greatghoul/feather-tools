@@ -138,7 +138,17 @@ function BatchUrlCleaner() {
             'https://example.com/page?utm_source=google&utm_medium=cpc&utm_campaign=test',
             'https://shop.example.com/product/123?fbclid=abc123&ref=facebook',
             'https://news.example.com/article?gclid=xyz789&source=newsletter',
-            'https://blog.example.com/post?utm_source=twitter&utm_content=social'
+            'https://blog.example.com/post?utm_source=twitter&utm_content=social',
+            'https://store.example.com/item?id=456&utm_term=shoes&utm_content=ad',
+            'https://forum.example.com/thread/789?msclkid=def456&campaign_id=summer',
+            'https://music.example.com/track/321?ad_id=ad789&click_id=clk123',
+            'https://travel.example.com/deal?utm_campaign=holiday&ref=partner',
+            'https://video.example.com/watch?v=abc123&gclsrc=aw.ds',
+            'https://food.example.com/recipe?source=instagram&fb_source=feed',
+            'https://app.example.com/download?utm_medium=email&fb_action_ids=12345',
+            'https://events.example.com/register?utm_source=linkedin&fb_action_types=like',
+            'https://news.example.com/article/456?utm_content=footer&gclid=xyz123',
+            'https://shop.example.com/cart?ref=affiliate&utm_term=discount'
         ];
         setInputUrls(examples.join('\n'));
     };
