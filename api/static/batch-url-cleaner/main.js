@@ -1,5 +1,6 @@
 // Batch URL Cleaner Main JavaScript
 import { html, render, useState, useEffect, useRef } from 'preact';
+import { InputCard } from './InputCard.js';
 
 // Common tracking parameters to remove
 const COMMON_TRACKING_PARAMS = [
@@ -155,33 +156,11 @@ function BatchUrlCleaner() {
 
     return html`
         <div className="batch-url-cleaner">
-            <!-- Input Section -->
-            <div className="card mb-4">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Input URLs</h5>
-                    <button 
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick=${loadExampleUrls}
-                    >
-                        Load Examples
-                    </button>
-                </div>
-                <div className="card-body">
-                    <div className="url-input-container">
-                        <textarea
-                            className="form-control url-input"
-                            placeholder="Paste your URLs here, one per line..."
-                            value=${inputUrls}
-                            onInput=${(e) => setInputUrls(e.target.value)}
-                        />
-                        ${inputUrlCount > 0 && html`
-                            <div className="url-count">
-                                ${inputUrlCount} URL${inputUrlCount !== 1 ? 's' : ''}
-                            </div>
-                        `}
-                    </div>
-                </div>
-            </div>
+            <${InputCard} 
+                inputUrls=${inputUrls}
+                setInputUrls=${setInputUrls}
+                loadExampleUrls=${loadExampleUrls}
+            />
 
             <!-- Options Section -->
             <div className="card mb-4">
