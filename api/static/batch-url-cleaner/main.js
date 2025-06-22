@@ -124,8 +124,7 @@ function BatchUrlCleaner() {
     return html`
         <div className="batch-url-cleaner">
             <${InputCard} 
-                inputUrls=${inputUrls}
-                setInputUrls=${setInputUrls}
+                onUrlsChange=${setInputUrls}
             />
 
             <${SettingCard}
@@ -143,7 +142,6 @@ function BatchUrlCleaner() {
 
             <${OutputCard}
                 cleanedUrls=${cleanedUrls}
-                isProcessing=${isProcessing}
                 copyButtonRef=${copyButtonRef}
                 onCopy=${handleCopy}
                 onDownload=${handleDownload}

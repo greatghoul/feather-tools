@@ -3,7 +3,6 @@ import { html } from 'preact';
 
 export function OutputCard({ 
     cleanedUrls, 
-    isProcessing, 
     copyButtonRef,
     onCopy,
     onDownload 
@@ -39,7 +38,6 @@ export function OutputCard({
                     `}
                 </div>
                 <div class="card-body">
-                    
                     ${cleanedUrls && html`
                         <div class="results" id="output">
                             <textarea 

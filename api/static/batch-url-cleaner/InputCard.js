@@ -1,29 +1,32 @@
 // Input Card Component for Batch URL Cleaner
-import { html } from 'preact';
+import { html, useState } from 'preact';
 
-export function InputCard({ inputUrls, setInputUrls }) {
-    // Count URLs in input
-    const inputUrlCount = inputUrls.trim() ? inputUrls.trim().split('\n').filter(line => line.trim()).length : 0;
+// Example URLs for testing URL cleaning
+const exampleUrls = [
+    'https://example.com/page?utm_source=google&utm_medium=cpc&utm_campaign=test',
+    'https://shop.example.com/product/123?fbclid=abc123&ref=facebook',
+    'https://news.example.com/article?gclid=xyz789&source=newsletter',
+    'https://blog.example.com/post?utm_source=twitter&utm_content=social',
+    'https://store.example.com/item?id=456&utm_term=shoes&utm_content=ad',
+    'https://forum.example.com/thread/789?msclkid=def456&campaign_id=summer',
+    'https://music.example.com/track/321?ad_id=ad789&click_id=clk123',
+    'https://travel.example.com/deal?utm_campaign=holiday&ref=partner',
+    'https://video.example.com/watch?v=abc123&gclsrc=aw.ds',
+    'https://food.example.com/recipe?source=instagram&fb_source=feed',
+    'https://app.example.com/download?utm_medium=email&fb_action_ids=12345',
+    'https://events.example.com/register?utm_source=linkedin&fb_action_types=like',
+    'https://news.example.com/article/456?utm_content=footer&gclid=xyz123',
+    'https://shop.example.com/cart?ref=affiliate&utm_term=discount'
+];
 
+export function InputCard({ onUrlsChange }) {
+    const [inputUrls, setInputUrls] = useState('');
+    
     // Load example URLs
     const loadExampleUrls = () => {
-        const examples = [
-            'https://example.com/page?utm_source=google&utm_medium=cpc&utm_campaign=test',
-            'https://shop.example.com/product/123?fbclid=abc123&ref=facebook',
-            'https://news.example.com/article?gclid=xyz789&source=newsletter',
-            'https://blog.example.com/post?utm_source=twitter&utm_content=social',
-            'https://store.example.com/item?id=456&utm_term=shoes&utm_content=ad',
-            'https://forum.example.com/thread/789?msclkid=def456&campaign_id=summer',
-            'https://music.example.com/track/321?ad_id=ad789&click_id=clk123',
-            'https://travel.example.com/deal?utm_campaign=holiday&ref=partner',
-            'https://video.example.com/watch?v=abc123&gclsrc=aw.ds',
-            'https://food.example.com/recipe?source=instagram&fb_source=feed',
-            'https://app.example.com/download?utm_medium=email&fb_action_ids=12345',
-            'https://events.example.com/register?utm_source=linkedin&fb_action_types=like',
-            'https://news.example.com/article/456?utm_content=footer&gclid=xyz123',
-            'https://shop.example.com/cart?ref=affiliate&utm_term=discount'
-        ];
-        setInputUrls(examples.join('\n'));
+        const urls = exampleUrls.join('\n');
+        setInputUrls(urls);
+        onUrlsChange(urls);
     };
 
     // Calculate dynamic rows for textarea (between 5 and 10)
@@ -50,14 +53,13 @@ export function InputCard({ inputUrls, setInputUrls }) {
                         class="form-control url-input"
                         placeholder="Paste your URLs here, one per line..."
                         value=${inputUrls}
-                        onInput=${(e) => setInputUrls(e.target.value)}
+                        onInput=${(e) => {
+                            const newValue = e.target.value;
+                            setInputUrls(newValue);
+                            onUrlsChange(newValue);
+                        }}
                         rows=${calculateRows()}
                     />
-                    ${inputUrlCount > 0 && html`
-                        <div class="url-count">
-                            ${inputUrlCount} URL${inputUrlCount !== 1 ? 's' : ''}
-                        </div>
-                    `}
                 </div>
             </div>
         </div>
