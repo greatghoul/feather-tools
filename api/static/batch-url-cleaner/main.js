@@ -24,13 +24,9 @@ function BatchUrlCleaner() {
     const [removeTracking, setRemoveTracking] = useState(true);
     const [customParams, setCustomParams] = useState('');
     const [removeAll, setRemoveAll] = useState(false);
-    const [stats, setStats] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     
     const copyButtonRef = useRef();
-
-    // Count URLs in input
-    const inputUrlCount = inputUrls.trim() ? inputUrls.trim().split('\n').filter(line => line.trim()).length : 0;
 
     // Clean a single URL
     const cleanUrl = (urlString) => {
@@ -80,17 +76,7 @@ function BatchUrlCleaner() {
             const urls = inputUrls.trim().split('\n').filter(line => line.trim());
             const results = urls.map(url => cleanUrl(url));
             
-            // Calculate stats
-            const originalCount = urls.length;
-            const cleanedCount = results.length;
-            const modifiedCount = urls.filter((url, index) => url !== results[index]).length;
-            
             setCleanedUrls(results.join('\n'));
-            setStats({
-                original: originalCount,
-                cleaned: cleanedCount,
-                modified: modifiedCount
-            });
             setIsProcessing(false);
         }, 300);
     };
@@ -158,7 +144,6 @@ function BatchUrlCleaner() {
             <${OutputCard}
                 cleanedUrls=${cleanedUrls}
                 isProcessing=${isProcessing}
-                stats=${stats}
                 copyButtonRef=${copyButtonRef}
                 onCopy=${handleCopy}
                 onDownload=${handleDownload}

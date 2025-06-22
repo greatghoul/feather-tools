@@ -4,7 +4,6 @@ import { html } from 'preact';
 export function OutputCard({ 
     cleanedUrls, 
     isProcessing, 
-    stats, 
     copyButtonRef,
     onCopy,
     onDownload 
@@ -33,25 +32,16 @@ export function OutputCard({
                     `}
                 </div>
                 <div class="card-body">
-                    ${stats && html`
-                        <div class="results-stats">
-                            <div class="stat-item">
-                                <span>Original URLs:</span>
-                                <strong>${stats.original}</strong>
-                            </div>
-                            <div class="stat-item">
-                                <span>Cleaned URLs:</span>
-                                <strong>${stats.cleaned}</strong>
-                            </div>
-                            <div class="stat-item">
-                                <span>Modified URLs:</span>
-                                <strong>${stats.modified}</strong>
-                            </div>
-                        </div>
-                    `}
                     
                     ${cleanedUrls && html`
-                        <div class="url-output">${cleanedUrls}</div>
+                        <div class="results" id="output">
+                            <textarea 
+                                class="form-control font-monospace" 
+                                rows="5"
+                                readonly
+                                value=${cleanedUrls}
+                            ></textarea>
+                        </div>
                     `}
                 </div>
             </div>
