@@ -21,9 +21,6 @@ const COMMON_TRACKING_PARAMS = [
 function BatchUrlCleaner() {
     const [inputUrls, setInputUrls] = useState('');
     const [cleanedUrls, setCleanedUrls] = useState('');
-    const [removeTracking, setRemoveTracking] = useState(true);
-    const [customParams, setCustomParams] = useState('');
-    const [removeAll, setRemoveAll] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     
     const copyButtonRef = useRef();
@@ -40,7 +37,7 @@ function BatchUrlCleaner() {
                 const paramsToRemove = new Set();
                 
                 // Add common tracking parameters if enabled
-                if (removeTracking) {
+                if (removeCommonTracking) {
                     COMMON_TRACKING_PARAMS.forEach(param => paramsToRemove.add(param));
                 }
                 
@@ -118,7 +115,6 @@ function BatchUrlCleaner() {
     const handleClear = () => {
         setInputUrls('');
         setCleanedUrls('');
-        setStats(null);
     };
 
     return html`
@@ -128,12 +124,6 @@ function BatchUrlCleaner() {
             />
 
             <${SettingCard}
-                removeTracking=${removeTracking}
-                setRemoveTracking=${setRemoveTracking}
-                customParams=${customParams}
-                setCustomParams=${setCustomParams}
-                removeAll=${removeAll}
-                setRemoveAll=${setRemoveAll}
                 inputUrls=${inputUrls}
                 isProcessing=${isProcessing}
                 onClean=${handleCleanUrls}

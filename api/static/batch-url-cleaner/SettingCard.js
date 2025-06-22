@@ -1,18 +1,15 @@
 // Settings Card Component for Batch URL Cleaner
-import { html } from 'preact';
+import { html, useState } from 'preact';
 
 export function SettingCard({ 
-    removeTracking, 
-    setRemoveTracking, 
-    customParams, 
-    setCustomParams, 
-    removeAll, 
-    setRemoveAll,
     inputUrls,
     isProcessing,
     onClean,
     onClear
 }) {
+    const [removeCommonTrackings, setRemoveCommonTrackings] = useState(true);
+    const [removeAllTrackings, setRemoveAllTrackings] = useState(false);
+    const [removeCustomTrackings, setRemoveCustomTrackings] = useState('');
     return html`
         <div class="card mb-4">
             <div class="card-header">
@@ -25,29 +22,29 @@ export function SettingCard({
                             <input
                                 class="form-check-input"
                                 type="checkbox"
-                                id="removeTracking"
-                                checked=${removeTracking}
-                                onChange=${(e) => setRemoveTracking(e.target.checked)}
-                                disabled=${removeAll}
+                                id="removeCommonTrackings"
+                                checked=${removeCommonTrackings}
+                                onChange=${(e) => setRemoveCommonTrackings(e.target.checked)}
+                                disabled=${removeAllTrackings}
                             />
-                            <label class="form-check-label" htmlFor="removeTracking">
+                            <label class="form-check-label" htmlFor="removeCommonTrackings">
                                 Remove common tracking parameters (utm_*, fbclid, gclid, etc.)
                             </label>
                         </div>
                     </div>
                     
                     <div class="option-group">
-                        <label htmlFor="customParams" class="form-label">
+                        <label htmlFor="removeCustomTrackings" class="form-label">
                             Custom parameters to remove (comma-separated):
                         </label>
                         <input
                             type="text"
                             class="form-control custom-parameters-input"
-                            id="customParams"
+                            id="removeCustomTrackings"
                             placeholder="param1, param2, param3"
-                            value=${customParams}
-                            onInput=${(e) => setCustomParams(e.target.value)}
-                            disabled=${removeAll}
+                            value=${removeCustomTrackings}
+                            onInput=${(e) => setRemoveCustomTrackings(e.target.value)}
+                            disabled=${removeAllTrackings}
                         />
                     </div>
                     
@@ -56,11 +53,11 @@ export function SettingCard({
                             <input
                                 class="form-check-input"
                                 type="checkbox"
-                                id="removeAll"
-                                checked=${removeAll}
-                                onChange=${(e) => setRemoveAll(e.target.checked)}
+                                id="removeAllTrackings"
+                                checked=${removeAllTrackings}
+                                onChange=${(e) => setRemoveAllTrackings(e.target.checked)}
                             />
-                            <label class="form-check-label" htmlFor="removeAll">
+                            <label class="form-check-label" htmlFor="removeAllTrackings">
                                 Remove ALL query parameters
                             </label>
                         </div>
