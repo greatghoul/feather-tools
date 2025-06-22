@@ -3,7 +3,7 @@ import { html, useState } from 'preact';
 
 // Example URLs for testing URL cleaning
 const exampleUrls = [
-    'https://example.com/page?utm_source=google&utm_medium=cpc&utm_campaign=test',
+    'https://example.com/page?utm_source=google&utm_medium=cpc&utm_campaign=test&_ts=122331321321',
     'https://shop.example.com/product/123?fbclid=abc123&ref=facebook',
     'https://news.example.com/article?gclid=xyz789&source=newsletter',
     'https://blog.example.com/post?utm_source=twitter&utm_content=social',
@@ -20,9 +20,8 @@ const exampleUrls = [
 ];
 
 export function SettingCard({ 
-    onUrlsChange,
     isProcessing,
-    onClean,
+    onSubmit,
     onClear
 }) {
     const [inputUrls, setInputUrls] = useState('');
@@ -42,6 +41,17 @@ export function SettingCard({
         if (!inputUrls) return 5;
         const lineCount = inputUrls.split('\n').length;
         return Math.max(5, Math.min(10, lineCount));
+    };
+
+    const handleSubmit = () => {
+        onSubmit({
+            inputUrls,
+            settings: {
+                removeCommonTrackings,
+                removeAllTrackings,
+                removeCustomTrackings
+            }
+        });
     };
 
     return html`
@@ -122,7 +132,7 @@ export function SettingCard({
                 <div class="d-flex gap-2">
                     <button
                         class="btn btn-primary"
-                        onClick=${onClean}
+                        onClick=${handleSubmit}
                         disabled=${!inputUrls.trim() || isProcessing}
                     >
                         ${isProcessing ? 'Processing...' : 'Clean URLs'}

@@ -1,5 +1,5 @@
 // Batch URL Cleaner Main JavaScript
-import { html, render, useState, useEffect, useRef } from 'preact';
+import { html, render, useState, useRef } from 'preact';
 import { SettingCard } from './SettingCard.js';
 import { OutputCard } from './OutputCard.js';
 
@@ -18,31 +18,30 @@ const COMMON_TRACKING_PARAMS = [
 ];
 
 function BatchUrlCleaner() {
-    const [inputUrls, setInputUrls] = useState('');
     const [cleanedUrls, setCleanedUrls] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     
     const copyButtonRef = useRef();
 
     // Clean a single URL
-    const cleanUrl = (urlString) => {
+    const cleanUrl = (urlString, settings) => {
         try {
             const url = new URL(urlString.trim());
-            
-            if (removeAll) {
+
+            if (settings.removeAllTrackings) {
                 // Remove all query parameters
                 url.search = '';
             } else {
                 const paramsToRemove = new Set();
                 
                 // Add common tracking parameters if enabled
-                if (removeCommonTracking) {
+                if (settings.removeCommonTrackings) {
                     COMMON_TRACKING_PARAMS.forEach(param => paramsToRemove.add(param));
                 }
                 
                 // Add custom parameters
-                if (customParams.trim()) {
-                    customParams.split(',').forEach(param => {
+                if (settings.removeCustomTrackings.trim()) {
+                    settings.removeCustomTrackings.split(',').forEach(param => {
                         const trimmed = param.trim();
                         if (trimmed) paramsToRemove.add(trimmed);
                     });
@@ -62,7 +61,7 @@ function BatchUrlCleaner() {
     };
 
     // Process all URLs
-    const handleCleanUrls = () => {
+    const handleCleanUrls = ({ inputUrls, settings }) => {
         if (!inputUrls.trim()) return;
         
         setIsProcessing(true);
@@ -70,7 +69,7 @@ function BatchUrlCleaner() {
         // Simulate processing delay for better UX
         setTimeout(() => {
             const urls = inputUrls.trim().split('\n');
-            const results = urls.map(url => cleanUrl(url));
+            const results = urls.map(url => cleanUrl(url, settings));
             
             setCleanedUrls(results.join('\n'));
             setIsProcessing(false);
@@ -112,16 +111,14 @@ function BatchUrlCleaner() {
 
     // Clear all
     const handleClear = () => {
-        setInputUrls('');
         setCleanedUrls('');
     };
 
     return html`
         <div className="batch-url-cleaner">
             <${SettingCard}
-                onUrlsChange=${setInputUrls}
                 isProcessing=${isProcessing}
-                onClean=${handleCleanUrls}
+                onSubmit=${handleCleanUrls}
                 onClear=${handleClear}
             />
 
