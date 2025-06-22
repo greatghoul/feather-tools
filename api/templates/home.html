@@ -21,4 +21,15 @@
             </div>
         {% endfor %}
     </div>
+
+    <h2 class="mb-4" id="text-tools">Text Tools</h2>
+    <div class="row">
+        {% set tool_keys = ['batch-url-cleaner'] %}
+        {% for tool_key in tool_keys %}
+            <div class="col-md-6 mb-4">
+            {% set tool = tools[tool_key] %}
+            {% include "shared/tool_card.html" %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

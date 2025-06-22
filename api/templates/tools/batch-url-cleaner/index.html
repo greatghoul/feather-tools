@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='batch-url-cleaner/styles.css') }}">
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">{{ page_name }}</h1>
+    <p class="lead mb-5">{{ page_note }}</p>
+
+    {% include 'shared/app.html' %}
+
+    <div class="row row-gap-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">How to Use</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li><strong>Paste your URLs</strong> into the input area (one per line)</li>
+                        <li><strong>Configure cleaning options</strong> to remove unwanted parameters</li>
+                        <li>Click <strong>"Clean URLs"</strong> to process all URLs</li>
+                        <li>Copy the cleaned URLs or <strong>download as text file</strong></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Features</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>Batch Processing</strong> - Clean multiple URLs at once</li>
+                        <li><strong>Remove Tracking</strong> - Strip common tracking parameters</li>
+                        <li><strong>Custom Filters</strong> - Remove specific query parameters</li>
+                        <li><strong>Privacy Focused</strong> - All processing happens in your browser</li>
+                        <li><strong>Export Options</strong> - Copy or download cleaned URLs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Common Tracking Parameters</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">This tool can automatically remove common tracking parameters including:</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Google Analytics:</strong>
+                            <ul class="small">
+                                <li>utm_source</li>
+                                <li>utm_medium</li>
+                                <li>utm_campaign</li>
+                                <li>utm_term</li>
+                                <li>utm_content</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Facebook:</strong>
+                            <ul class="small">
+                                <li>fbclid</li>
+                                <li>fb_action_ids</li>
+                                <li>fb_action_types</li>
+                                <li>fb_source</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Others:</strong>
+                            <ul class="small">
+                                <li>gclid (Google Ads)</li>
+                                <li>msclkid (Microsoft)</li>
+                                <li>ref (Referrer)</li>
+                                <li>source</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{{ url_for('static', filename='batch-url-cleaner/main.js') }}"></script>
+{% endblock %}
