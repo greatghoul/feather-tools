@@ -14,35 +14,35 @@ export function SettingCard({
     onClear
 }) {
     return html`
-        <div className="card mb-4">
-            <div className="card-header">
-                <h5 className="mb-0">Cleaning Options</h5>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Cleaning Options</h5>
             </div>
-            <div className="card-body">
-                <div className="cleaning-options">
-                    <div className="option-group">
-                        <div className="form-check">
+            <div class="card-body">
+                <div class="cleaning-options">
+                    <div class="option-group">
+                        <div class="form-check">
                             <input
-                                className="form-check-input"
+                                class="form-check-input"
                                 type="checkbox"
                                 id="removeTracking"
                                 checked=${removeTracking}
                                 onChange=${(e) => setRemoveTracking(e.target.checked)}
                                 disabled=${removeAll}
                             />
-                            <label className="form-check-label" htmlFor="removeTracking">
+                            <label class="form-check-label" htmlFor="removeTracking">
                                 Remove common tracking parameters (utm_*, fbclid, gclid, etc.)
                             </label>
                         </div>
                     </div>
                     
-                    <div className="option-group">
-                        <label htmlFor="customParams" className="form-label">
+                    <div class="option-group">
+                        <label htmlFor="customParams" class="form-label">
                             Custom parameters to remove (comma-separated):
                         </label>
                         <input
                             type="text"
-                            className="form-control custom-parameters-input"
+                            class="form-control custom-parameters-input"
                             id="customParams"
                             placeholder="param1, param2, param3"
                             value=${customParams}
@@ -51,32 +51,32 @@ export function SettingCard({
                         />
                     </div>
                     
-                    <div className="option-group">
-                        <div className="form-check">
+                    <div class="option-group">
+                        <div class="form-check">
                             <input
-                                className="form-check-input"
+                                class="form-check-input"
                                 type="checkbox"
                                 id="removeAll"
                                 checked=${removeAll}
                                 onChange=${(e) => setRemoveAll(e.target.checked)}
                             />
-                            <label className="form-check-label" htmlFor="removeAll">
+                            <label class="form-check-label" htmlFor="removeAll">
                                 Remove ALL query parameters
                             </label>
                         </div>
                     </div>
                 </div>
                 
-                <div className="d-flex gap-2">
+                <div class="d-flex gap-2">
                     <button
-                        className="btn btn-primary"
+                        class="btn btn-primary"
                         onClick=${onClean}
                         disabled=${!inputUrls.trim() || isProcessing}
                     >
                         ${isProcessing ? 'Processing...' : 'Clean URLs'}
                     </button>
                     <button
-                        className="btn btn-outline-secondary"
+                        class="btn btn-outline-secondary"
                         onClick=${onClear}
                     >
                         Clear All

@@ -34,27 +34,27 @@ export function InputCard({ inputUrls, setInputUrls }) {
     };
 
     return html`
-        <div className="card mb-4">
-            <div className="card-header d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Input URLs</h5>
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Input URLs</h5>
                 <button 
-                    className="btn btn-outline-secondary btn-sm"
+                    class="btn btn-outline-secondary btn-sm"
                     onClick=${loadExampleUrls}
                 >
                     Load Examples
                 </button>
             </div>
-            <div className="card-body">
-                <div className="url-input-container">
+            <div class="card-body">
+                <div class="url-input-container">
                     <textarea
-                        className="form-control url-input"
+                        class="form-control url-input"
                         placeholder="Paste your URLs here, one per line..."
                         value=${inputUrls}
                         onInput=${(e) => setInputUrls(e.target.value)}
                         rows=${calculateRows()}
                     />
                     ${inputUrlCount > 0 && html`
-                        <div className="url-count">
+                        <div class="url-count">
                             ${inputUrlCount} URL${inputUrlCount !== 1 ? 's' : ''}
                         </div>
                     `}

@@ -10,55 +10,48 @@ export function OutputCard({
     onDownload 
 }) {
     return html`
-        ${(cleanedUrls || isProcessing) && html`
-            <div className="card">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Cleaned URLs</h5>
+        ${(cleanedUrls) && html`
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Cleaned URLs</h5>
                     ${cleanedUrls && html`
-                        <div className="btn-group">
+                        <div class="btn-group">
                             <button
                                 ref=${copyButtonRef}
-                                className="btn btn-outline-primary btn-sm btn-copy"
+                                class="btn btn-outline-primary btn-sm btn-copy"
                                 onClick=${onCopy}
                             >
-                                <i className="bi bi-clipboard"></i> Copy
+                                <i class="bi bi-clipboard"></i> Copy
                             </button>
                             <button
-                                className="btn btn-outline-success btn-sm"
+                                class="btn btn-outline-success btn-sm"
                                 onClick=${onDownload}
                             >
-                                <i className="bi bi-download"></i> Download
+                                <i class="bi bi-download"></i> Download
                             </button>
                         </div>
                     `}
                 </div>
-                <div className="card-body">
+                <div class="card-body">
                     ${stats && html`
-                        <div className="results-stats">
-                            <div className="stat-item">
+                        <div class="results-stats">
+                            <div class="stat-item">
                                 <span>Original URLs:</span>
                                 <strong>${stats.original}</strong>
                             </div>
-                            <div className="stat-item">
+                            <div class="stat-item">
                                 <span>Cleaned URLs:</span>
                                 <strong>${stats.cleaned}</strong>
                             </div>
-                            <div className="stat-item">
+                            <div class="stat-item">
                                 <span>Modified URLs:</span>
                                 <strong>${stats.modified}</strong>
                             </div>
                         </div>
                     `}
                     
-                    <div className=${`processing-indicator ${isProcessing ? 'show' : ''}`}>
-                        <div className="spinner-border spinner-border-sm me-2" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
-                        Processing URLs...
-                    </div>
-                    
                     ${cleanedUrls && html`
-                        <div className="url-output">${cleanedUrls}</div>
+                        <div class="url-output">${cleanedUrls}</div>
                     `}
                 </div>
             </div>
