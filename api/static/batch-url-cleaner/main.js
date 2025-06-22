@@ -73,7 +73,7 @@ function BatchUrlCleaner() {
         
         // Simulate processing delay for better UX
         setTimeout(() => {
-            const urls = inputUrls.trim().split('\n').filter(line => line.trim());
+            const urls = inputUrls.trim().split('\n');
             const results = urls.map(url => cleanUrl(url));
             
             setCleanedUrls(results.join('\n'));

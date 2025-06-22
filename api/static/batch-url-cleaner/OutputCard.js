@@ -8,6 +8,13 @@ export function OutputCard({
     onCopy,
     onDownload 
 }) {
+    // Calculate dynamic rows for textarea (between 5 and 15)
+    const calculateRows = () => {
+        if (!cleanedUrls) return 5;
+        const lineCount = cleanedUrls.split('\n').length;
+        return Math.max(5, Math.min(15, lineCount));
+    };
+
     return html`
         ${(cleanedUrls) && html`
             <div class="card">
@@ -37,7 +44,7 @@ export function OutputCard({
                         <div class="results" id="output">
                             <textarea 
                                 class="form-control font-monospace" 
-                                rows="5"
+                                rows=${calculateRows()}
                                 readonly
                                 value=${cleanedUrls}
                             ></textarea>
