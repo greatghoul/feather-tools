@@ -33,7 +33,6 @@ export function SettingCard({
     const loadExampleUrls = () => {
         const urls = exampleUrls.join('\n');
         setInputUrls(urls);
-        onUrlsChange(urls);
     };
 
     // Calculate dynamic rows for textarea (between 5 and 10)
@@ -75,7 +74,6 @@ export function SettingCard({
                         onInput=${(e) => {
                             const newValue = e.target.value;
                             setInputUrls(newValue);
-                            onUrlsChange(newValue);
                         }}
                         rows=${calculateRows()}
                     />
