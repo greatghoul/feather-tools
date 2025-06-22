@@ -1,5 +1,6 @@
 // Batch URL Cleaner Main JavaScript
 import { html, render, useState, useRef } from 'preact';
+import { StoreContext } from '../_shared/StoreContext.js';
 import { SettingCard } from './SettingCard.js';
 import { OutputCard } from './OutputCard.js';
 
@@ -18,8 +19,13 @@ const COMMON_TRACKING_PARAMS = [
 ];
 
 function BatchUrlCleaner() {
+    const [busy, setBusy] = useState(false);
     const [cleanedUrls, setCleanedUrls] = useState('');
-    const [isProcessing, setIsProcessing] = useState(false);
+
+    const store = {
+        busy,
+        setBusy,
+    };
     
     const copyButtonRef = useRef();
 
@@ -64,7 +70,7 @@ function BatchUrlCleaner() {
     const handleCleanUrls = ({ inputUrls, settings }) => {
         if (!inputUrls.trim()) return;
         
-        setIsProcessing(true);
+        setBusy(true);
         
         // Simulate processing delay for better UX
         setTimeout(() => {
@@ -72,7 +78,7 @@ function BatchUrlCleaner() {
             const results = urls.map(url => cleanUrl(url, settings));
             
             setCleanedUrls(results.join('\n'));
-            setIsProcessing(false);
+            setBusy(false);
         }, 300);
     };
 
@@ -115,20 +121,21 @@ function BatchUrlCleaner() {
     };
 
     return html`
-        <div className="batch-url-cleaner">
-            <${SettingCard}
-                isProcessing=${isProcessing}
-                onSubmit=${handleCleanUrls}
-                onClear=${handleClear}
-            />
+        <${StoreContext.Provider} value=${store}>
+            <div className="batch-url-cleaner">
+                <${SettingCard}
+                    onSubmit=${handleCleanUrls}
+                    onClear=${handleClear}
+                />
 
-            <${OutputCard}
-                cleanedUrls=${cleanedUrls}
-                copyButtonRef=${copyButtonRef}
-                onCopy=${handleCopy}
-                onDownload=${handleDownload}
-            />
-        </div>
+                <${OutputCard}
+                    cleanedUrls=${cleanedUrls}
+                    copyButtonRef=${copyButtonRef}
+                    onCopy=${handleCopy}
+                    onDownload=${handleDownload}
+                />
+            </div>
+        <//>
     `;
 }
 

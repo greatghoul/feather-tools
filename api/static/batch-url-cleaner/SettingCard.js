@@ -1,5 +1,6 @@
 // URL Cleaner Component
 import { html, useState } from 'preact';
+import { useStore } from '../_shared/StoreContext.js';
 
 // Example URLs for testing URL cleaning
 const exampleUrls = [
@@ -19,11 +20,11 @@ const exampleUrls = [
     'https://shop.example.com/cart?ref=affiliate&utm_term=discount'
 ];
 
-export function SettingCard({ 
-    isProcessing,
+export function SettingCard({
     onSubmit,
     onClear
 }) {
+    const { busy, setBusy } = useStore();
     const [inputUrls, setInputUrls] = useState('');
     const [removeCommonTrackings, setRemoveCommonTrackings] = useState(true);
     const [removeAllTrackings, setRemoveAllTrackings] = useState(false);
@@ -136,9 +137,9 @@ export function SettingCard({
                     <button
                         class="btn btn-primary"
                         onClick=${handleSubmit}
-                        disabled=${!inputUrls.trim() || isProcessing}
+                        disabled=${!inputUrls.trim() || busy}
                     >
-                        ${isProcessing ? 'Processing...' : 'Clean URLs'}
+                        ${busy ? 'Processing...' : 'Clean URLs'}
                     </button>
                     <button
                         class="btn btn-outline-secondary"

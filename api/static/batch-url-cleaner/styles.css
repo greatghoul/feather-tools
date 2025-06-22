@@ -110,17 +110,6 @@
     margin-top: 0.5rem;
 }
 
-.processing-indicator {
-    display: none;
-    text-align: center;
-    padding: 1rem;
-    color: #6c757d;
-}
-
-.processing-indicator.show {
-    display: block;
-}
-
 @media (max-width: 768px) {
     .url-input,
     .url-output {
