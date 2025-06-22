@@ -42,6 +42,11 @@ export function SettingCard({
         return Math.max(5, Math.min(10, lineCount));
     };
 
+    const handleClear = () => {
+        setInputUrls('');
+        onClear();
+    }
+
     const handleSubmit = () => {
         onSubmit({
             inputUrls,
@@ -137,7 +142,7 @@ export function SettingCard({
                     </button>
                     <button
                         class="btn btn-outline-secondary"
-                        onClick=${onClear}
+                        onClick=${handleClear}
                     >
                         Clear All
                     </button>
