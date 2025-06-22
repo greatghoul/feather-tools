@@ -1,6 +1,5 @@
 // Batch URL Cleaner Main JavaScript
 import { html, render, useState, useEffect, useRef } from 'preact';
-import { InputCard } from './InputCard.js';
 import { SettingCard } from './SettingCard.js';
 import { OutputCard } from './OutputCard.js';
 
@@ -119,12 +118,8 @@ function BatchUrlCleaner() {
 
     return html`
         <div className="batch-url-cleaner">
-            <${InputCard} 
-                onUrlsChange=${setInputUrls}
-            />
-
             <${SettingCard}
-                inputUrls=${inputUrls}
+                onUrlsChange=${setInputUrls}
                 isProcessing=${isProcessing}
                 onClean=${handleCleanUrls}
                 onClear=${handleClear}
