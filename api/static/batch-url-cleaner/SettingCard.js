@@ -1,9 +1,20 @@
 // Settings Card Component for Batch URL Cleaner
 import { html } from 'preact';
 
-export function SettingCard({ removeTracking, setRemoveTracking, customParams, setCustomParams, removeAll, setRemoveAll }) {
+export function SettingCard({ 
+    removeTracking, 
+    setRemoveTracking, 
+    customParams, 
+    setCustomParams, 
+    removeAll, 
+    setRemoveAll,
+    inputUrls,
+    isProcessing,
+    onClean,
+    onClear
+}) {
     return html`
-        <div className="card">
+        <div className="card mb-4">
             <div className="card-header">
                 <h5 className="mb-0">Cleaning Options</h5>
             </div>
@@ -54,6 +65,22 @@ export function SettingCard({ removeTracking, setRemoveTracking, customParams, s
                             </label>
                         </div>
                     </div>
+                </div>
+                
+                <div className="d-flex gap-2">
+                    <button
+                        className="btn btn-primary"
+                        onClick=${onClean}
+                        disabled=${!inputUrls.trim() || isProcessing}
+                    >
+                        ${isProcessing ? 'Processing...' : 'Clean URLs'}
+                    </button>
+                    <button
+                        className="btn btn-outline-secondary"
+                        onClick=${onClear}
+                    >
+                        Clear All
+                    </button>
                 </div>
             </div>
         </div>
